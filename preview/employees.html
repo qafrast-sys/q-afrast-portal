@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#06386B">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>إدارة الموظفين — قمم افريست</title>
+  <style>
+    :root{
+      --navy:#06386B;--blue:#0964A5;--soft:#EAF3FB;
+      --ink:#172033;--muted:#687386;--line:#DCE4EC;
+      --bg:#F3F6F9;--white:#fff;--green:#087443;
+      --red:#B42318;--amber:#A15C00;
+      --shadow:0 14px 32px rgba(6,56,107,.12)
+    }
+    *{box-sizing:border-box}
+    html{background:var(--bg)}
+    body{
+      margin:0;min-height:100vh;font-family:Tahoma,Arial,sans-serif;
+      background:var(--bg);color:var(--ink)
+    }
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    button:disabled{opacity:.62;cursor:not-allowed}
+    .hidden{display:none!important}
+    .login{min-height:100vh;display:grid;place-items:center;padding:18px}
+    .login-card{
+      width:min(430px,100%);background:#fff;border:1px solid var(--line);
+      border-radius:26px;padding:26px;box-shadow:var(--shadow)
+    }
+    .logo{display:block;width:126px;height:126px;object-fit:contain;margin:0 auto 10px}
+    h1,h2,h3,p{margin-top:0}
+    .title{text-align:center;color:var(--navy);font-size:25px;margin-bottom:6px}
+    .sub{text-align:center;color:var(--muted);line-height:1.7;margin-bottom:22px}
+    label{display:grid;gap:7px;margin:12px 0;font-weight:800;font-size:14px}
+    input,select,textarea{
+      width:100%;border:1px solid #C7D3DF;border-radius:13px;
+      padding:12px;background:#fff;outline:none;min-height:48px
+    }
+    textarea{min-height:92px;resize:vertical}
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--blue);box-shadow:0 0 0 3px rgba(9,100,165,.12)
+    }
+    .btn{
+      border:0;border-radius:13px;min-height:46px;
+      padding:11px 15px;font-weight:900
+    }
+    .btn-primary{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff}
+    .btn-soft{background:var(--soft);color:var(--navy)}
+    .btn-success{background:#E8F7EF;color:var(--green)}
+    .btn-danger{background:#FFF0EF;color:var(--red)}
+    .btn-wide{width:100%}
+    .error{
+      margin-top:12px;padding:12px;border-radius:12px;background:#FFF1F0;
+      color:var(--red);border:1px solid #F2C5C0;line-height:1.7
+    }
+    .loader{
+      width:36px;height:36px;margin:20px auto;border:4px solid #DBE7F1;
+      border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .topbar{
+      position:sticky;top:0;z-index:20;display:flex;align-items:center;
+      justify-content:space-between;gap:10px;padding:9px 14px;
+      background:rgba(255,255,255,.95);border-bottom:1px solid var(--line);
+      backdrop-filter:blur(9px)
+    }
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}
+    .top-logo{width:50px;height:50px;object-fit:contain;flex:0 0 auto}
+    .brand strong{display:block;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand small{display:block;color:var(--muted);margin-top:4px}
+    .logout{
+      width:44px;height:44px;border:1px solid var(--line);
+      border-radius:12px;background:#fff;color:var(--navy);font-size:20px
+    }
+    .wrap{width:min(1160px,100%);margin:auto;padding:18px 14px 34px}
+    .layout{display:grid;grid-template-columns:1fr;gap:14px}
+    .panel{
+      background:#fff;border:1px solid var(--line);border-radius:20px;
+      padding:16px;box-shadow:0 7px 18px rgba(15,45,75,.05)
+    }
+    .panel-head{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;margin-bottom:14px
+    }
+    .panel-head h2{margin:0;color:var(--navy);font-size:20px}
+    .employee-list{display:grid;gap:9px;max-height:520px;overflow:auto}
+    .employee-card{
+      width:100%;display:flex;align-items:center;justify-content:space-between;
+      gap:10px;text-align:right;border:1px solid var(--line);
+      border-radius:15px;background:#fff;padding:13px
+    }
+    .employee-card.active{border-color:var(--blue);background:var(--soft)}
+    .employee-card strong{display:block;color:var(--navy)}
+    .muted{color:var(--muted);font-size:13px;line-height:1.7}
+    .badge{
+      display:inline-block;border-radius:999px;padding:5px 9px;
+      font-size:12px;font-weight:900
+    }
+    .badge-active{background:#E8F7EF;color:var(--green)}
+    .badge-off{background:#FFF0EF;color:var(--red)}
+    .form-grid{display:grid;grid-template-columns:1fr;gap:10px}
+    .check-row{
+      display:flex;align-items:center;gap:9px;font-weight:800;
+      margin:12px 0
+    }
+    .check-row input{width:20px;height:20px;min-height:0}
+    .actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:14px}
+    .credentials{
+      margin-top:14px;border:1px solid #B8D9C7;background:#F0FBF5;
+      border-radius:17px;padding:15px
+    }
+    .credentials-grid{
+      display:grid;grid-template-columns:1fr;gap:9px;margin-top:10px
+    }
+    .credential{
+      background:#fff;border:1px solid #D7E8DF;border-radius:12px;padding:10px
+    }
+    .credential span{display:block;color:var(--muted);font-size:12px}
+    .credential strong{display:block;margin-top:4px;word-break:break-all}
+    .credential-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+    .empty{text-align:center;color:var(--muted);padding:28px 10px}
+    .toast{
+      position:fixed;right:14px;left:14px;bottom:16px;z-index:60;
+      max-width:540px;margin:auto;padding:13px;border-radius:13px;
+      background:#172033;color:#fff;text-align:center;box-shadow:var(--shadow)
+    }
+    @media(min-width:820px){
+      .layout{grid-template-columns:340px 1fr;align-items:start}
+      .form-grid{grid-template-columns:1fr 1fr}
+      .actions{grid-template-columns:repeat(3,1fr)}
+      .credentials-grid{grid-template-columns:repeat(3,1fr)}
+      .credential-actions{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <style>#installAppBtn{position:fixed;left:14px;bottom:14px;z-index:99999;border:0;border-radius:14px;padding:12px 16px;background:#07386b;color:#fff;font:800 14px Tahoma,Arial;box-shadow:0 8px 25px #0003;display:none}</style>
+</head>
+<body>
+  <main id="loginScreen" class="login">
+    <section class="login-card">
+      <img class="logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABELDA8MChEPDg8TEhEUGSobGRcXGTMkJh4qPDU/Pjs1OjlDS2BRQ0daSDk6U3FUWmNma2xrQFB2fnRofWBpa2f/2wBDARITExkWGTEbGzFnRTpFZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2f/wgARCAEYARMDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAQFAQIDBv/EABcBAQEBAQAAAAAAAAAAAAAAAAABAgP/2gAMAwEAAhADEAAAAb0AAAAABjIKEvnmrRLEKAAAAAAAAAAAABzqe1WnS5o1W1UCZB3PS8eyXTeNEstFfYQCgAAAAAAACvO8ny3RJ1fjNZ052ZWSvQbxS9rQoAESrv8AnrPOR5y2JozoAAAAAAB5n01WVWcZszzz6ExKUJvXcc9efbbhtZ2cidMc1bT9b/nvn5300POsy/MekTcZ2AAAAA12rCfVVubM516lha4r4r607c87bX0tNm53xqkze7FBKtx1ceedSmm5Q9Z3n&#43;vL1bTfl1AAAAAUV7UFXnTazazrrsmVtlWnnuu1rvHeHz643t104E/pA3icg6k3nixXHLgJvlvUUO&#43;c6xor2aDOgAAABwINTMhWdfQ&#43;e9CdosqFESn127c50jh35dNLDl3jGemxwbSlGCt5aSU6w7Ku1mJ6PzfpKDGwAAAHnvQ1BU5Ys39D5u8LGusa08/nGe3Kw78enHrI7VPQto8a1jfaPovbpST0rptXZV3rpXK5j&#43;hqLdQzoAAABGkjz8X1VYlLMhq9bW9uJ57Ou3XnPk5q&#43;e/VmM62qZ3nU9HXd4BifWyqh2NVYjtH6pY9oE2XYKAAAABjznpPPJDYzXaxqJJB9Dus7&#43;UkR7PX08&#43;mxqRE13r0FVrXWSpVZ6RPPzZfFeG2NIzJr7NbQSgAAAANNx53pfDyS8q7nfvB5bzMr5MavSU1rQY1vy7SdSFmwRB9N5n0kvGZX8JZ3HhvZGld9CyQpuaCgAAACvSwr6eP0xJ4a66zvpnrLrzm7zU2HmPm9ubBzlce5A9BVTjWBOhy6dOMeyx0stbNbausc6CUAAhcLLTXZLD52BK/WyVXbT0QNLItTpckpV0KVIn1UYsORFXSKTF4KXpbFrNrERpKuSxU1yAulZZec1n0eOTN2j8Ympf1UmkL/lF5EyZRTy0h7V0s7jiLZcaw&#43;Esfr0gazc8O3GW3OGdVnCPY7xZa1ekusjrUWero7Ggl73MLBcDOlTbEpV0ql3txS724pd7cU&#43;LkUGZ2LJFJbcSPtdJaVdCNpMQ8t6mrrlpeCnXAo&#43;tuKVdClnTAErl14mWMoYG2&#43;m68OeMEnnE7ErEfBIhyOJL48O44TORvz06mkyDuZ34ZN5PHsaMEyxkb8&#43;hsFAEckK/qktF5E9A6ErPHsrWLhJmYeSXiHkmIOCe56r2QMpOQcE7MPJLQ8E1WzTqFAAAAAAAAahsAAAABqGwAAAP/xAAtEAACAgEDAgUEAwEAAwAAAAACAwABBBESExQzBRAhMDIVICMxIjRAJEFDUP/aAAgBAQABBQL/AOfr6&#43;Tzu3brmGd3/sMxCm5RFAOwKskNpZdeeLejpbKGCYl/p8Q9A&#43;3dUBlCfkeOs5YvTF5YF/l5175lOo68rKqmpFY4bSlYFwMKhP7HY4tlE3FJThbX&#43;HKdsqUZUPlusrTgwAEK9gwFgsWWOzHyKbX&#43;Bl/l86onmjHFNTKy9ZyHOQ5yHOQ5yHOQ5vObymMo2wwpgGJJZju5R9/NTRV5XqRITSQmVlb/AGcbG5PPJVyAs7WYFRj7hFQ1yBczGbin6rBToP6mVlcnmIkd9M&#43;dO&#43;dO&#43;dO&#43;dO&#43;Y&#43;IVl9mWvYzCZoXuZxfx8xDeyvSs/&#43;v5LWTDEQxQ6i5zXOW5vm&#43;bpvuE3bQa2Myg3pq9LAt4e3mXq7yr1vDHU54h2IpZNP&#43;GMH7upUr7CuhpYWy/1BcBlGDsZglqv28vFMz/nRQPliVoieIdhKicRsHFEb3DXl1ISskJ1ITqwnWBFhbimVf411R3r65taPwb/AC&#43;5n/qB&#43;09mZKrcDWjjh/5V24NXkF0aZ0qp0yp0qp0qfPN140L3kFEL/EPliX/0e2blhMl9N8l/NPZmWy1plftXb/cArGqMpuua3BZZs8r/AFksuwxf3Xf8QmL/AGPby60yPKr0vH7cz&#43;xK/au3UqV5EVtIAoBu9Jv/AJX8chl6Y3yM7Buae&#43;8Ktcj284fXTzxC1qZ/YlRXbIqCqyp1cBhvgCKQrIXMo9qkmV2wrFbS3TG&#43;WQW1jqUxeAPuZCeZd&#43;HHDXaimMe1k8Q7EqCVClSptGbanpVMdrF0Gxn9NEff4GlumP8ALL9WsAdi9unu5waj5YzN4eIdjyWjYsmE05ZUNNOuPX&#43;dUdw7rp1XH3&#43;Eu3j1W/J9GP8ATGT/ABlXRV7d&#43;lPdbi8lM4zzC34tVreNi8cf2B&#43;UyTvfz2M/9oX6H/LGDQCYPIB1YCj5ZN/kdd8BtIYgmae5lJ4j80t2THSsJk5HBXKbCH5PvRZMvWzor0vcWZQ0TSKJ7xIApamVXoFuC2W6/wAJ3643a9wwoxLFdvvAIQ8scmUWS1RFTCJY/J3wZputku7K9lzQYnvs7eIV2r9wkAUJR6MCpj1dV7&#43;TjUyfjXDaRzSBptH5P&#43;G2CGspRSkhUZWik95nbw&#43;0SNCo3jOr0lOAoShuJ30XutywCMcbfLdLvWB&#43;h&#43;Tv1XEEvIGcx3CYyM7Se8zt4fatzKPnnOMutZ8ZimVs9tuWARrzb9mmspJ3BxnSsRkvGnDc45xrmxEtiroeCitqiFG0AJJ2VqOoVQfhdVEjXJ7N6w0WydGqdIE6Wp0842VNj5xOnTsnSnOlKdKU6Up0pTpSnSnOlOdIU6Q50ZSsVlThfON842xYXV/dk5HBLzao/ezHGqBdkGUy1pw3E4fZzHGqmZTaLyO9oYuSbmmsTlqCyyDtScR5OhXoONlG1uSy1KxHE6svIJJJO2KmU20rxWk5eXkEkklZqe2kr6nIZasw6PO/reHfDydnXRVmtG0spq3upIda4ojNsjj8wt/UZATHdzLje1iMFbuqTOqTMvIWSMFwLs8pWzFOlvzHrNOC4F1mtFh42QsUdUmZrwYvw/s&#43;I9zGyVUnNaDF4b1gvKITfm/1fDvhGNAKxLGsjPIbXhOBYZzgZMEwpDiq8jqkxR0vIy3rYjw34&#43;R4A2X0&#43;fT59Pl&#43;HjPp8&#43;n1t&#43;nwvD6g&#43;H1rfh8LEEL6QOSuPHDNaLGDg7g&#43;nz6fPp8crlVjI4KjKtmVfh/oPh96l4fWo&#43;H1rfh96jgVp9Pn0&#43;fT5jI4K91&#43;LTj6SufJx&#43;eLwRG/v6P8/ucq5yrnKucq5yrlMEru9KJlyv7fJ&#43;V/pXotfIOtHulnZAZ7bZ/Yxe24qsuXakjslXf/ACV&#43;uo3Rbd9q793Q1yrnKucq5yrnKuCVF58S5xLnEucS5xLlLAbutapLBrgPdt/JaDKrSwq6ctRTYjWNcNd7hSW9S&#43;MbRqV45WNKKdOVjxMgoMJwHuUqwu6oq4lziXOJc4lziXBGh9z9eZFQ1r56zX2NfccRVNzKZVtohEuOhaKqNnOuz5XduaMKFTLEAKiJ22fltpizl2nd/lgbti4Zn1Fmwivmn5bpQFRW/SVyW4hZyiTTUqrpf&#43;LbW729tbvv/8QAIREAAgEEAgIDAAAAAAAAAAAAABEBAhAgMCExQVASQFH/2gAIAQMBAT8B9fMETsmSZwpgqhlMvXJECgQrzxOqRZ19FPWpvOroo60zonop60z9NIm7OR7Pl&#43;WmyItxpmrOLIRGSFum3kY&#43;bSeL&#43;bvi04IQhCESIVpEIQhe4//EACQRAAIBAwQCAgMAAAAAAAAAAAABEQIQIRIgMDFAUSJBQlBh/9oACAECAQE/AfNjwkx0/a5EpEtlVRS4KlHGkNks1Ml3XyXEuxv1vo7Ku&#43;FCUb6eyvvhXfAuyrvhXdonwW5FeDBHGhU&#43;7K0lVs8Ko93m2LO0kj2RaSeZLBkjAkRgjAkfZGbfjb&#43;EZskPq&#43;pks1M1Mlkig1M1OyZLJZLNTJ/cf//EADMQAAEDAQUGBgIBBQEBAAAAAAEAAhExEBIhMnEDIkFRYZETIDAzgaFAsXIjQlJiglDB/9oACAEBAAY/Av8A0nQeiqU4E/mS4rd3QrwqpJjot1tutm9I&#43;FuuB/JYf9vNVA9baQeYW67xG9VDt0/i3ZsuDEc/JA&#43;lSNVi/wCkDfmOnl5O5qDRYV5fhXW1su3jFsNU7XsFDRHow5foqDm/BeDmB8l1iwxPOy5szqVnd3Wd3dZ3d1nd3Wd3dZnd1md3WY91ec51zWqulRxHFf7Cv4HiUcPu0bNtVHHibLjMvPn6N52T924ZhRXgg4cfVkmFmHdBooLJXiGppZdZl/dsNElZF7a9te2vbU7UQOXPyyKOVw8aeq1vkazvZ823W1UDF5VAqKnlkqTYeYxUhB3P1NPI99nzZdarrcyx88lX304CyGuk2ObyKLeXqeJs68lDxBtHWz5UN&#43;SvD2WbigTU28VRyo5UcqOV9&#43;XgLPlB0RFIs1CI5j1WWfCbpYGjDFeFsa8TY3Sy63KKlZftZftZVl&#43;1ltwojLnV5qJvNA41TE31N5yEClrdLJbWlrdLIEAeSG0FT5IulHVO0CYm&#43;oetoKjlZ82t08tzZ/JUCyEUW8MEdU4ht7AJkcloPUa7zfNrdFJWX7WX7V1ojmVAwCrGqkYqqmZU9AjqjjgQJUsguHJPd8epdWdquu8nza0nkvF2&#43;A4BUCoLIdVXRBCjrYVPQftHVdls8OKMCOfrB/LyfNp2rxi0YNQLjZijX/6qceKx2bTpVGteNvwP2jqsOiClz6gLD1JX&#43;vAWygRzUBXn4v8A0n6IWG7FE2QF82XQDnUOd2X9Nwd0UEQYH7R1XZBACKIHmfVkZT5Idi01V5mMqkkqXEoIpxLPiUKhScBKhmKrh0TNVSNFAcHjk5b7HM/Slm8OihN0TP5&#43;qWuoVdFOakOl3K3cxHFD&#43;8jsncuQQRTpIW62OqxMrHDVVkpmqdosSTjxspB6KJG0HJy3g7Z/YTcQRe4fgXm4O/ax/qO6UUGnIWOQRWJAWDSfpVDf4rnqnRyTNU7RH&#43;Slr4KrfW&#43;whYOUxB5hQX3h19aG7xWJ&#43;FisBYULOC4lbrFi4BHRM1TtF/0jjOPFbzOyqfkLKFgXNUEg4epA3isThy8lCsjuy9vuuAW8&#43;Tqq7If9L3mDRY7Un/lV2h&#43;FF1/dB39QQiL8TzCu&#43;IyqMAHQrFju1g0VFPpYQt/aGOQwVD3WQd1kZ3KwZs&#43;ywuD4WdZz3VfuyipZRUVFRUs4LAx8rOqt7KjFJj484wmU0XcD67bgrxQJEFXm1Tr3D0m3OPFM3aikWk8grroot4AoG6JCLhVOvRhyRKDSArzU69GCaGximuPGy83miXRVANjEJrjxCvLd&#43;go2lEdU/W2NmBqVvAdleCk/CwA7IN2gGPGy7s1Lp&#43;Qp48bHaKXUhe4F7gRa10kp18xKO&#43;CgXUV1rpMpweYTbhmAmhzoIXuBBrTOKOqbomgughC68GCrrjBlEtMhdk/WzecAm3qICQTKIc6MU0MMwokA8U5zaSs4QccQCiGuBKfbLXXei9z6XufS9z6W68he59LOZXufS3XkLefKw2n0gHbYCeiuHbY8kGyBqhdxACBvxI5L3Ppe59L3PpXJhEXpmwjm6Fuv7ref2W6&#43;At58rB/cLedj0XufS9z6XufSO9M&#43;tevQvEvdYQ3ohS43vQ8S/wAZiPVzt7rO3us7e6zt7rO3uoDgflSU25iD0Tv4q50lAku5YLE0TR/lRPAq1bEmt5NH&#43;RWzR1ToYXQIOKDyny0twQJmnCzcaXFFpbdIW1WJhZ291nb3WdvdZ291nb3WBB0tyN7LI3ssjeyyN7LI3spDQPhQoG1w0V7xd7Re6b9Mqh21kaKDtcNEP6hwpgnQ/ePFe51om3tqZ4YIOc&#43;9HRRM4o7xAdUK74mGiIdtJBCuna7ui976W7tY&#43;Fe8XHROJdJKgiVkb2WRvZZG9lkb2WRvZboA09eT&#43;SGtqVswTqjuSNU7AAmigDGU4ReCM01ou1m8P7gU/DTFNJ6oi7jNOaBuwNUHDEBXrv8AdMT0RusiTzQvVT/5KGmnCU5t3hSUBdgRwKbLASDWUCRz/ai7vTEK8RA1TnCIhEXZ6lAOr&#43;HPH1J4&#43;h//xAAqEAEAAgECBAUFAQEBAAAAAAABABEhMVEQQWFxMIGRofEgscHR8EDhUP/aAAgBAQABPyH/AM&#43;mFl7cb0AHQz5aALKZLf8AZjQ/MwP5ksr&#43;0abj1Qeo98TmrzzwrjZXDlx3cIDfYH/Tbkpl6fTprKeSXW0HLjmHyqzN1HLVMa97SDZZ/kzXVOfKXKNlmeLG6uxCiW9hM0jvTknyh1qy6&#43;llvKTVNs5PaXB1zLU/xZyz1djgtFnlfDlbgjRbnbVmkkqEx08FwVn2gRF6M0BHlv8A4UdbHnx9jeGSx/ZZzudXwsOFyfxPnEP&#43;4h/2E&#43;cT5hPkk&#43;aT59HAAdUPBw&#43;0tJrICBnxoP8AAVDd14iI2nPVleZXmRaMzKXq4h9TMOuQ/ukACgoOGfHN/SCNU5bzRJ8VQkN2GgeLFXke/C7uc07zBv2RFAq0EZrVzvEBcvInV&#43;pP7VP5VOj9v3Om9pgiJBRj6MOczzlppZd3i17ht&#43;hN7z/O0AAYDSNMHU3xBBf2TrAjvD/pQblgnJB7EttL7E6BFwARAGl5bcPJAjnqDZCC0F&#43;J2wVxFBuz0pOGj28KUd3kTcK1f3FblawQQQ4uVoIbOj88UFrRGhA2jwgOqnxLGGFNquApoblcPYF9p3YXho9s5JvIINAeY/mOyvIwQlLVemf8RKv0T4qfBEEBR8/q8DMtKX1lRGiNBKYTObDKfFh7h4a/dDXBIVoq9J&#43;vE/7Bu7q8EJpw84nUeqB/9p/RZ/dQJHl6vE5qUcy81bUDIs1wvQ/cGToyjrWe3iaaDtqxEsHM8&#43;Gh1s9o74K7FJy24aHBKBSCdZ2ngIrn7Q3p1pYr&#43;quOp2lICY1IvVfef1us1eaZ9/8AHieUTx6SNxeYThp9v1gAiVsenAx0EA2szxR&#43;hM05Wqus96iOdk1WsBWjOVDuPiOgOkts8cbue5w0&#43;3hq4B6JDfgQtsL1etuiaNDVYirzaIo9YlUZc5yk7Eb9JSQli5wPee7SlIALecCJQGXLtK3xADtp1HZnJegy3QoanPhTG&#43;SDZZNHt4ap5SDeDhzmc&#43;Knw0ymgmgst&#43;R2lSmgq7mPSr7xZJrfSV64GBnnIKb/AJmLat85h03mIJXh18alNcXtwGmzWGe5NHt4GpFMm62hUvp58jhYFF57bBGWs7uTMAUUeaoIArAwreVPOWoRNIuiTIQ1coCkUf8AUeC03&#43;Iw5mgdZePEKzZNsDiMQ05w8zKxiBV0DnCrV7Ee9z3BFq7leFAedxNktMYnM8v3mZ3lkUf2ZWCu9MpbnoBl1/MiHXeTUfzWKu35dpRd45ZbYJXhr28XCGfHR2&#43;jILkkvszQvI2hgHKtoqMXjpPcE89RxpqjJ95hvPzzzhdIvZcc4wDuYXTTZhPb5vdvhOmgeGaruZi0Zi6ufKNRa3KLNupFfcfZ8UuLgt017birt9hns7cMW9RpGdKNUMGrRTAUGGe5Jl3IjrasGWAaXUyy0Iusx3Q7upjadF4MT2uP10b3gwYEGESNX3WM8tK59YpLAKye5Bumtle/&#43;AhcP0igz6GB8&#43;cIso6Ygg0vQ3cRAhvy6M9yRqRLnvLn0nujcJtbsM&#43;syiL3UCoDontsfr4/UfiXDkb2&#43;05CHr/2AwZ6TFhnk4iVPJM5CHkz4t1LzyPSP8rZpKDVXTVmH3HMRWtsf8dJ7kmdXRYtFL6sDpB/MIn2FOFewx&#43;vjz7vxDmpFgXL/sfuDYTNrCDzJ0xC/wB/JSz8xr4l/wCT6es5NbGnBWtpiC0J2JobxQxTuhcr2yNSr1CSjXuLTq7Q/qP2OUA17QEzvDjQQjLFdNMvaoTLNeTlrUUBVXCzRjFGuO5Fj6PtNmO0JUZrwsfO6zF9GaSrmTTo3dx5EgR&#43;2h9sDFP0iusCurZU1p8503rOm9Z0z1nTes6b1nSes6D1nRes6R6zo&#43;qfYlAXP5twLndxDmr6kr6e5&#43;sac/VUKrQFb0vx8OK1Ivyl54LTaJqMjUiQxVRRXhU4NyLgeVoXmcXH1RlICZYIGFbpZEC&#43;g1pKx6VrMXDCooDkXKe1FwR&#43;RdhmOwFqxAwVLySoqxbXA6ArTMMIJTEHxlmSUtXY1HCLdA3ZZN6OWnB&#43;e1OKSe0T2j7cUNYY3JliNmkHc/U2lDrdBvFC1Ni05QABwWjAGrq1ispEyxaDQ4Cx6/tCT0qXtxEQwVNIC6BTMXRTgj7VRFlITDSZBNEuYuGRhxSUjwGynyxP7&#43;k/n6wG5KRl2xoEd66Z5wzyBkn3Y9o&#43;3BkKJgWKjDLLvDlkRW0O88i4BrItS0CVyam5BlQQ0pm4TJ95ZVAhPcnFkoOy5aNuDWV1Cy&#43;FaQdTWIZ5glwGyXAZI2CoF5K6w8E0DBWD0jMvkvK2subgrmcyBTk&#43;i29uWanNZXpXC4&#43;c6Fqb6JoBXREZOwlwGSNgqaR1AbtVpTT6DbSdVtXjG7MKSpj2VfmS0&#43;a5XB66cqo8Ap4oz4vPi8&#43;Lz4vPi8ujtiAbAGsRYOUpaNo5UlKVb1JQFZ1d5eQIcrliWRe1MM1gzGSyo1BcFwETTeMxLcrnEXJQVCICahglsKc0KxJW1ZmZ7QGGzNpYhyTEoW1ZLwQ3WfF58XnxefF58XnJs3Xx&#43;Lz4vPi8&#43;Lz4vLg7cgnWiVDCwaRQrLYuBO/VYuS1IcrVrGQ&#43;1pZjbbWDC1hpsZXXJ06WdB9i41CYaTTBzg1NOhFFqoqo2kdkVlCogyqDmMiy&#43;L2TmNq1UrCGyT4vPi8&#43;Lz4vPi85umyvAs3gjo3xUFuOChqzkIupTc4YuUurL2lL1OIjo6fRcA6JwvNSy6vM0hnT6/ML3oGscoiFD3lopNCuIUb80xiAOajJjvBARcroNosg45ENuU1&#43;/wBxw7cJk0uBq81VGIZYa0vS2WrCaGxvEw99D3/EqWchYRwvYBRdYaygEM6wWH7navM19z8TlmpmC/3CAc1sMO8To0Jou5WRxKGT&#43;qC2MXzpdpcbEda9YS8n6HHzAUSyny9dYAlZoY0mLQf41AzDR&#43;ui7r6eQ7L8D//aAAwDAQACAAMAAAAQ8888888&#43;z88888888888888nECK8078888888888nKInM88N&#43;88888888qKJQg&#43;vIpO38888884xcrwYxlRU8c888888&#43;k18TWI3zemXc888888shvIivz08/n288888umZswSxvAv170888888fkQ6pUXXsBr3888888/KyNCTqtT5bc888888ssHiNxozSKmB/88888/JCDsvSTxosp888818PdPO//wCWD3/nH9/McxaWScv&#43;p4fH7U41vPzrjrjjiTrv7nvrvjPLCz&#43;FJAAKBFKHFDyy/POPz89A/wBN&#43;jPfsfvzzzzzzzzzzzzxzzzzzzz/xAAgEQADAAMAAwADAQAAAAAAAAAAAREQITEgMEFAUWFx/9oACAEDAQE/EPRfey&#43;DbQmnz13M8K7XSrj760ISGNlZWVjesiq6RR99Fw3EM2yu3gknPevSjgX0/Neh6noQ&#43;bHTz2fzHhHDF3zSshZ6XAkNzD8V5vKTZjVrLQrcP6xPS2l0daG9UaEbw5G4VjfwXk2l0/Sd6JMjKzYk/okR8Gh/LKm/CrEEfomIQ/hVYQmeCdw0aNFD2WBPY2ht7Dej5blW1afQrW6N&#43;hacuGk&#43;kkEEEH&#43;BG9EkkXRKQQQSJFnZv2bNm/C4uaUuKUpS/i//xAAfEQADAAMAAgMBAAAAAAAAAAAAAREQITEgYTBBUUD/2gAIAQIBAT8Q80ifOkQg8JJ8Y2XfjmKUuY6e0SX0fCsNjGEpERERCOIuj4XVc&#43;CYSrghcJ6WYbkTHL5rDOR9HXm8gWP5oZV0ITG/Hj5ywzkPnjMOkjHvmTxwG9CwLw/B&#43;awtOjWiFieU7Gk0z0w/gojfCOxrcET6VLmPQlWRDQ1PJJvmBxaG0QKfuDa&#43;hk3hMe6GTevBM8UuMr9KylKblI5SlKUSrg01ijEC/A0Oo&#43;2D0aKPYktRBE3JgtkSag&#43;oibah2bQlqYTa4ew9x7D2HuOejJt9wewrkFK4vdi9g3ennRr5NGjXhCExCfhCYhCfhBqfy//EACoQAQACAQIEBwADAQEBAAAAAAEAESExQVFhcfAQgZGhscHRIDDh8UBQ/9oACAEBAAE/EP8A54qNEttkOnjhtsFDGH3uA6evjKMLBo0/9lLZdB15A3i7dxd/ntAraOVz0PGW8UzRQy8OBrpG1BVKXdW4EyNQ/wBz4i0XMuOMXuMSnD5b/wCnEWmXAUSoEPBQWgObUdR5GYI1mYWcw0lR14S&#43;q1nQoqyfPo&#43;UcEW1ut1284AII5E3/wDJUZwranhcol3jWPQsKaKO37AgcJYJ9s6stzLRS/sqRzvn9C2NMfrPywaydoLrz/iS1KMFr1N4TzLY2z4raY&#43;A7hk5/wDiTBDwd1vgAINOl/kJgSAFq6EOvroB/wA&#43;7ioqb3fL&#43;QaD7Gr/AH&#43;m4q6cVxHZhRRd4l8uvEhKkmdh4n5/4GJS0Te28J5V4EC7VALVoHGPNysHQOJ3wJgIFiZeRwItFxEAOFZeS4c4d3fM7BfM7JfM7C&#43;49pfMe2vmPdXzFe294ndMYnlM6c5eGLDutk5xwhmiWbJNM8AN&#43;Zy/8B2QBGovTqbTeEroQA9DofsImZVWV&#43;G0BFAGVYzbNBa8hy&#43;YQigwfBZrFRA8B7PWGwAoAoDwF9Qczj5vma2hlbNxiIWVn5/alEUFKJ7ZQhgQbBsV&#43;Hz4DG4HW09MsFsSq3q&#43;fxDLAtVoCKGHGg/5&#43;fAmiHT5Id8fMD3ev6gezzf1P&#43;pBX9v1FR14CWudbfMAAABQG38CWpcOW4&#43;/OX445tuPM&#43;P7aBdbpGD3ZRwIeBvuvIXl9gQUwFA2IIEAFHUzjwJZHNXYcV2JQEBbYergcov9k/eWfsTF/tBNvhiUGYl5Poc4Pk109B18Arl&#43;y6&#43;1xt6MnMmiSOj&#43;xHDI77Dr9w8OW4Q1Dfp3l9q8O3cHwOWnV9Hi95gUMOLarx&#43;hFjFWrv8AwIMCLN3Kn66zXAh/lHIg1VqAUC3Z5O8AlOjrOCiB029pfjbj6Ofm/wCxDbDlCNx002YB5Lq1&#43;MuaafgKGiqUfWvrw7VwYdChlNHnz5RsjzlU8eJ5bSiMbuK&#43;FUFUALV0IM2aasOfeJ/D&#43;wJfsP2I/g/Yq13HWJDXb9jvzIfOcNBuTDS3B2NuPKUBtLpzlmTHnBZ9TP8Ah/Uf9f7ey8Dwy7PEqHJ4CpFj2A3RuysADmL3V3&#43;ES4VFVbVg9FNN7GvKKEWafboebDVWd1ye80ZdnOL7&#43;7nFdV2c4bM1ZbHpcACjB4ID0OkXh9zAWAEGXhLIgLOpdF9G8p3qXufs7qMv7EUG7X2CLjtRc25eXgsPB6ilw5DwSiD4gbyc8RVVVV1Wd7pPYoOvWoMQUIsgZqB9EbqPSH/JKBHKBheD7eXi6fgpY6m7j10vyJsf/dH3e8PDvX1hafE&#43;7&#43;y21QB9P88BnKy903K/RLs&#43;fDs3B8NLz&#43;J7NNc1zTHKEh09BwJ7xYLxZjqPmCAksttydSEtYZfEAZGdUzu9osXbbGDWYAAXasCZsstrf8iUGPoPv&#43;y8U0uvWI6l5eOeuQv0H2p8O7cGE0e9p7NGbcg1XAm7Xv0mx7/SJDLoLiJhIO1a81ioxYoJ00Q3fqWrCzXnLTndUL9W5RLUsIacYTrwjOnhpVZkdBefvZngUACbcywDQZz5A6S1s0heNZfr&#43;wvF4sujtJud1CV7GS2g6OfTy8GscKjmbeZftCNLEsZ27g&#43;GjHR2UNVWn&#43;y0Ca0Zys&#43;tXeGx6Of8hEEAMtEJVFbLiJjA3zvCBplVyaeUooTTHAtUpq1leBTqNdSMoCemr1ENehxHmw6DARahgF2KzoLNIwHVx4jXnf8AcdeGzNWvx&#43;XwQEQNibMEFDWODuffRnbuDLlygVWgNV4EbETIUsX&#43;fcUs60aZNjaOHEWnKFrdrgbygAAWwpZdHS4CoW54PINY1egOOva/2Ug5VuQ9QvRlQgukz8TqMakJAaHvfVGXLjBvLGhEtQYGWYwYI6ZTEgrHrrlqZoxLxKWmRMnX&#43;w3BQKgW4g1z/wBo8/F6m&#43;k&#43;esaCxWs1hi0XoVq4EPAgwa8k5852vhOzcYViANV2h0uybyVSe0BlJDkg0&#43;40mRtpgtbT7SrlpKMN6EBIMDnHV0l6g0ifbY5ECdfVxmddjFuqX8TQIQwsjqipZfkasNvKMsi&#43;gbV4KrfWH9jW60&#43;qfsek4HGOGnU1NzwtiY6l6wlrrFbwn7vHHHW&#43;BW7&#43;QBaGxYCnBtO7cSMgFaFDV5iti2rKVfRModNCDo3x8SowNbR5LyxAaVxUTogVSESSz75fOXzXppFfNGfP&#43;RX4G3LP15M4FkuzWV6tyCMoaEzo7S76OON1t/ckKGopN&#43;pzlN/SKEc974kFoWaUDcHjByiINK1HwyhFsKicV0IkdXCXeLq&#43;UVcVCBaATvXEjpVeGPOI9NsGyjOBxruxcujTD9LwS6K7q2FAEf8ABcvpKBHMYxXNy&#43;k7nxmlKOsNJiWrLRbQFFxdsJpEiI8I1z6jEuUAdBH4BDM0Ywye8BNyneGWNDqf&#43;AwgWrjqcHnAaodXUc9XkgYGmHoj7mCTi9PVig2mpQ8yd64kIRVvB0YFOgWehmarv34vrHme0LV7xQ3Q1HpBke2AHCd/4ztnZlL9lRbShWKy8Y00XZp&#43;1Qzzky9mmDZPm3ozkWCX9pl5axhu2TX&#43;1AVaDVZo5OLHq/korX0x&#43;jfzjpVcEEaYeq/CWRcRblB8T7THuskoxNkdsTChtz/SPYtyK&#43;ZtqcQv4QBOSAfa2JzNv&#43;Zj3&#43;ZaTv8ACykDT6Ir0oA0LdzMuKHqp7B&#43;YT20jX4lYrRYu75ae0WfkydvpLc&#43;nRGmpj4/rUC1oiiaMU8Ov4iKPs4/9ecutrmGujsYljc9Y96ws&#43;a&#43;HvArFdz&#43;LlGn6yedfcVRkoEL5rDXL1v3Ch5Q74EXqnNfLB8p2WYtRC1sryimCyBtekMSBKFWVtM2slx4NcTlBmBG&#43;F4XCcP1J7RggfIQi8J1tkRojyfEx9Wm3L&#43;qyiHEVryINacNTrqvnAhSjii/aMEcLfmk&#43;5o76v5M0T0t9TBUPIfU10ecnuZKKWE53n/LfwU9b4bLdLbGpNbBqN1JAqsOFb3gwJTZ31PpZ8DLfSkpXz/NUXbawAR0Eoo0CY31/vVGQNCsioQadyaRvwCGwywr0dgV/VgVJwAqqPOBit4lbqHCDZnXwoFoN6WFx5ZO7DZXPnARisXVAzGDm6aVBpeEGzKEEy7gJrfPlGrlqL5EIlaLDYdY5CahsyxawIqmE6w6cqudGuMI0VwUX4BIq62Uj&#43;R1wTWiqH7jXwK5zdcYboMAxcyNrLqyFpeoJPYw9Rgj1v8Aydp4/wALGsnwltyOEA3bcN84IiGCao1I1uTRat&#43;QKUarp1YaRbQ6drPCowa7HkdY2CHAYPsTGmumg8uT4IEWoh5pawx1uzWvpO0fydo/kR2QC2Kbt9IDUlIYxePeZrgixVTpNKNkurNZd6BVsBxgdUwtTiohC0AYtdJTMNLx1J2j&#43;QpdN0aAH9hRawv4T3qKDx5dtyFNzVm0SrhUSVg0HmbytIRoKGZrdmfGxq3NQccICaYaJTDNf&#43;YFKN/Uc8NcpKPyFhuRai6CW65AE5w55RqRyGhqrTzuH3MLpsT2iS5FksbKetxKDAXevMnY&#43;D4JZGQhdqjpmcr26zle3WCvOPL/AFCLoFU7PHapbu/ZVGDllXKtvWYFtcs/mFWsaP3Yg1C62z52xTQbS1PebffgX3gLF7UXvNZlqqXuxKOwHRbvEe/IG1k6y3d&#43;y3d&#43;zt/6lydVa2nKbFFbSorjGI7OBbF0ehK7mNNPppKanvFt9YlUmlsedkCPArT52y8s7bLPSHZ1lQeR1l9u7zlu79lu79m3RN6VHX&#43;5bvAa1hw4OZgtY4dnPhiLp1HGuufKXVdZrHPjDB/Nx2vWLq7/ALFAVaCdgfc7A&#43;52B9zsj7nZH3LILmkvoR6KargQrhumbblXHXmiVeNSI5B5Coj4mAC9FvSATv0ZW7LDIL2HF54S&#43;8hvkLWIqACOApiL8LI2ecMRiLg4cRUQrtb3nV8EyaReekzKuhmXXzRVjjZN4Owhotu7EJFpDnWYYVRIHUukoasVrw7jFIgpFwYlMlxSD1Z2B9zsD7nYH3OwPudkfcDUnBRp6eCCIljO&#43;Pqd8fU74&#43;p3x9Tvj6gAVxSH1mu&#43;lXBmApAq0QIRCxGThAeQrQii0hoESgTJpMASBXJL13GsEFVDsOPKCFNxAW7zFlF&#43;YMC5VqINSI7qDVax17XXpdZRFGw4rTeNbMxSl3uBQQCo0IDChQJ0ixCLAcsDCZWp8kYC0s2JfF26Se874&#43;p3x9Tvj6nfH1O&#43;PqBILkg29P6BhQIaowWwHEb8bogvVxy8KSgtot3lxaowLytEFQGW8Dw18FoFLdCIlgtLZYjRBWqveCOiPhaUNqadHwUC1oJcQIKFxalOcDww&#43;FNQurq5tbdV5igVQDdiAKEdz&#43;Zg29oA1GSJdYJfqwnTVs44VkSm48KYtfxnTT3gmStaLFF1hlHayg6YowpvOnKBGBxAbNSa63luAp5L6M0o0q/EU2Kis4A2xWbqtd4rQNXJXd2bYGnOsritVaxIc9GWtW/u0qhit4ngkKaQ3wXnRTtMbL0EJSJkvVHWoVR5YgJPmfSXc413As05svGbT4WtfKdu4RQASsxuK0OdmbxTNE/TVl5YpMmInQQS3HBcA9I6onA5NMYfpNGQwDaoc8SiXgCwLwLKp1lfFMMKmmC7wdYyGZYNbBKy1OaqG1aQ1wvCZ3pqCQARCsFtaY0r&#43;aC2hZ/NB1/iO1GuB3f8K8KqKBCzRr&#43;K4ZqU5P6P/9k=" alt="شعار قمم افريست">
+      <h1 class="title">إدارة الموظفين</h1>
+      <p class="sub">إضافة الموظف وإنشاء حساب بوابته وإدارة حالته وكلمة مروره.</p>
+
+      <form id="loginForm">
+        <label>اسم المستخدم
+          <input id="username" value="admin" autocomplete="username" required>
+        </label>
+        <label>كلمة المرور
+          <input id="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button class="btn btn-primary btn-wide" type="submit">دخول</button>
+      </form>
+
+      <div id="loginLoading" class="hidden">
+        <div class="loader"></div>
+        <p class="sub">جاري الاتصال...</p>
+      </div>
+
+      <div id="loginError" class="error hidden"></div>
+    </section>
+  </main>
+
+  <main id="appScreen" class="hidden">
+    <header class="topbar">
+      <div class="brand">
+        <img class="top-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABELDA8MChEPDg8TEhEUGSobGRcXGTMkJh4qPDU/Pjs1OjlDS2BRQ0daSDk6U3FUWmNma2xrQFB2fnRofWBpa2f/2wBDARITExkWGTEbGzFnRTpFZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2f/wgARCAEYARMDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAQFAQIDBv/EABcBAQEBAQAAAAAAAAAAAAAAAAABAgP/2gAMAwEAAhADEAAAAb0AAAAABjIKEvnmrRLEKAAAAAAAAAAAABzqe1WnS5o1W1UCZB3PS8eyXTeNEstFfYQCgAAAAAAACvO8ny3RJ1fjNZ052ZWSvQbxS9rQoAESrv8AnrPOR5y2JozoAAAAAAB5n01WVWcZszzz6ExKUJvXcc9efbbhtZ2cidMc1bT9b/nvn5300POsy/MekTcZ2AAAAA12rCfVVubM516lha4r4r607c87bX0tNm53xqkze7FBKtx1ceedSmm5Q9Z3n&#43;vL1bTfl1AAAAAUV7UFXnTazazrrsmVtlWnnuu1rvHeHz643t104E/pA3icg6k3nixXHLgJvlvUUO&#43;c6xor2aDOgAAABwINTMhWdfQ&#43;e9CdosqFESn127c50jh35dNLDl3jGemxwbSlGCt5aSU6w7Ku1mJ6PzfpKDGwAAAHnvQ1BU5Ys39D5u8LGusa08/nGe3Kw78enHrI7VPQto8a1jfaPovbpST0rptXZV3rpXK5j&#43;hqLdQzoAAABGkjz8X1VYlLMhq9bW9uJ57Ou3XnPk5q&#43;e/VmM62qZ3nU9HXd4BifWyqh2NVYjtH6pY9oE2XYKAAAABjznpPPJDYzXaxqJJB9Dus7&#43;UkR7PX08&#43;mxqRE13r0FVrXWSpVZ6RPPzZfFeG2NIzJr7NbQSgAAAANNx53pfDyS8q7nfvB5bzMr5MavSU1rQY1vy7SdSFmwRB9N5n0kvGZX8JZ3HhvZGld9CyQpuaCgAAACvSwr6eP0xJ4a66zvpnrLrzm7zU2HmPm9ubBzlce5A9BVTjWBOhy6dOMeyx0stbNbausc6CUAAhcLLTXZLD52BK/WyVXbT0QNLItTpckpV0KVIn1UYsORFXSKTF4KXpbFrNrERpKuSxU1yAulZZec1n0eOTN2j8Ympf1UmkL/lF5EyZRTy0h7V0s7jiLZcaw&#43;Esfr0gazc8O3GW3OGdVnCPY7xZa1ekusjrUWero7Ggl73MLBcDOlTbEpV0ql3txS724pd7cU&#43;LkUGZ2LJFJbcSPtdJaVdCNpMQ8t6mrrlpeCnXAo&#43;tuKVdClnTAErl14mWMoYG2&#43;m68OeMEnnE7ErEfBIhyOJL48O44TORvz06mkyDuZ34ZN5PHsaMEyxkb8&#43;hsFAEckK/qktF5E9A6ErPHsrWLhJmYeSXiHkmIOCe56r2QMpOQcE7MPJLQ8E1WzTqFAAAAAAAAahsAAAABqGwAAAP/xAAtEAACAgEDAgUEAwEAAwAAAAACAwABBBESExQzBRAhMDIVICMxIjRAJEFDUP/aAAgBAQABBQL/AOfr6&#43;Tzu3brmGd3/sMxCm5RFAOwKskNpZdeeLejpbKGCYl/p8Q9A&#43;3dUBlCfkeOs5YvTF5YF/l5175lOo68rKqmpFY4bSlYFwMKhP7HY4tlE3FJThbX&#43;HKdsqUZUPlusrTgwAEK9gwFgsWWOzHyKbX&#43;Bl/l86onmjHFNTKy9ZyHOQ5yHOQ5yHOQ5vObymMo2wwpgGJJZju5R9/NTRV5XqRITSQmVlb/AGcbG5PPJVyAs7WYFRj7hFQ1yBczGbin6rBToP6mVlcnmIkd9M&#43;dO&#43;dO&#43;dO&#43;dO&#43;Y&#43;IVl9mWvYzCZoXuZxfx8xDeyvSs/&#43;v5LWTDEQxQ6i5zXOW5vm&#43;bpvuE3bQa2Myg3pq9LAt4e3mXq7yr1vDHU54h2IpZNP&#43;GMH7upUr7CuhpYWy/1BcBlGDsZglqv28vFMz/nRQPliVoieIdhKicRsHFEb3DXl1ISskJ1ITqwnWBFhbimVf411R3r65taPwb/AC&#43;5n/qB&#43;09mZKrcDWjjh/5V24NXkF0aZ0qp0yp0qp0qfPN140L3kFEL/EPliX/0e2blhMl9N8l/NPZmWy1plftXb/cArGqMpuua3BZZs8r/AFksuwxf3Xf8QmL/AGPby60yPKr0vH7cz&#43;xK/au3UqV5EVtIAoBu9Jv/AJX8chl6Y3yM7Buae&#43;8Ktcj284fXTzxC1qZ/YlRXbIqCqyp1cBhvgCKQrIXMo9qkmV2wrFbS3TG&#43;WQW1jqUxeAPuZCeZd&#43;HHDXaimMe1k8Q7EqCVClSptGbanpVMdrF0Gxn9NEff4GlumP8ALL9WsAdi9unu5waj5YzN4eIdjyWjYsmE05ZUNNOuPX&#43;dUdw7rp1XH3&#43;Eu3j1W/J9GP8ATGT/ABlXRV7d&#43;lPdbi8lM4zzC34tVreNi8cf2B&#43;UyTvfz2M/9oX6H/LGDQCYPIB1YCj5ZN/kdd8BtIYgmae5lJ4j80t2THSsJk5HBXKbCH5PvRZMvWzor0vcWZQ0TSKJ7xIApamVXoFuC2W6/wAJ3643a9wwoxLFdvvAIQ8scmUWS1RFTCJY/J3wZputku7K9lzQYnvs7eIV2r9wkAUJR6MCpj1dV7&#43;TjUyfjXDaRzSBptH5P&#43;G2CGspRSkhUZWik95nbw&#43;0SNCo3jOr0lOAoShuJ30XutywCMcbfLdLvWB&#43;h&#43;Tv1XEEvIGcx3CYyM7Se8zt4fatzKPnnOMutZ8ZimVs9tuWARrzb9mmspJ3BxnSsRkvGnDc45xrmxEtiroeCitqiFG0AJJ2VqOoVQfhdVEjXJ7N6w0WydGqdIE6Wp0842VNj5xOnTsnSnOlKdKU6Up0pTpSnSnOlOdIU6Q50ZSsVlThfON842xYXV/dk5HBLzao/ezHGqBdkGUy1pw3E4fZzHGqmZTaLyO9oYuSbmmsTlqCyyDtScR5OhXoONlG1uSy1KxHE6svIJJJO2KmU20rxWk5eXkEkklZqe2kr6nIZasw6PO/reHfDydnXRVmtG0spq3upIda4ojNsjj8wt/UZATHdzLje1iMFbuqTOqTMvIWSMFwLs8pWzFOlvzHrNOC4F1mtFh42QsUdUmZrwYvw/s&#43;I9zGyVUnNaDF4b1gvKITfm/1fDvhGNAKxLGsjPIbXhOBYZzgZMEwpDiq8jqkxR0vIy3rYjw34&#43;R4A2X0&#43;fT59Pl&#43;HjPp8&#43;n1t&#43;nwvD6g&#43;H1rfh8LEEL6QOSuPHDNaLGDg7g&#43;nz6fPp8crlVjI4KjKtmVfh/oPh96l4fWo&#43;H1rfh96jgVp9Pn0&#43;fT5jI4K91&#43;LTj6SufJx&#43;eLwRG/v6P8/ucq5yrnKucq5yrlMEru9KJlyv7fJ&#43;V/pXotfIOtHulnZAZ7bZ/Yxe24qsuXakjslXf/ACV&#43;uo3Rbd9q793Q1yrnKucq5yrnKuCVF58S5xLnEucS5xLlLAbutapLBrgPdt/JaDKrSwq6ctRTYjWNcNd7hSW9S&#43;MbRqV45WNKKdOVjxMgoMJwHuUqwu6oq4lziXOJc4lziXBGh9z9eZFQ1r56zX2NfccRVNzKZVtohEuOhaKqNnOuz5XduaMKFTLEAKiJ22fltpizl2nd/lgbti4Zn1Fmwivmn5bpQFRW/SVyW4hZyiTTUqrpf&#43;LbW729tbvv/8QAIREAAgEEAgIDAAAAAAAAAAAAABEBAhAgMCExQVASQFH/2gAIAQMBAT8B9fMETsmSZwpgqhlMvXJECgQrzxOqRZ19FPWpvOroo60zonop60z9NIm7OR7Pl&#43;WmyItxpmrOLIRGSFum3kY&#43;bSeL&#43;bvi04IQhCESIVpEIQhe4//EACQRAAIBAwQCAgMAAAAAAAAAAAABEQIQIRIgMDFAUSJBQlBh/9oACAECAQE/AfNjwkx0/a5EpEtlVRS4KlHGkNks1Ml3XyXEuxv1vo7Ku&#43;FCUb6eyvvhXfAuyrvhXdonwW5FeDBHGhU&#43;7K0lVs8Ko93m2LO0kj2RaSeZLBkjAkRgjAkfZGbfjb&#43;EZskPq&#43;pks1M1Mlkig1M1OyZLJZLNTJ/cf//EADMQAAEDAQUGBgIBBQEBAAAAAAEAAhExEBIhMnEDIkFRYZETIDAzgaFAsXIjQlJiglDB/9oACAEBAAY/Av8A0nQeiqU4E/mS4rd3QrwqpJjot1tutm9I&#43;FuuB/JYf9vNVA9baQeYW67xG9VDt0/i3ZsuDEc/JA&#43;lSNVi/wCkDfmOnl5O5qDRYV5fhXW1su3jFsNU7XsFDRHow5foqDm/BeDmB8l1iwxPOy5szqVnd3Wd3dZ3d1nd3Wd3dZnd1md3WY91ec51zWqulRxHFf7Cv4HiUcPu0bNtVHHibLjMvPn6N52T924ZhRXgg4cfVkmFmHdBooLJXiGppZdZl/dsNElZF7a9te2vbU7UQOXPyyKOVw8aeq1vkazvZ823W1UDF5VAqKnlkqTYeYxUhB3P1NPI99nzZdarrcyx88lX304CyGuk2ObyKLeXqeJs68lDxBtHWz5UN&#43;SvD2WbigTU28VRyo5UcqOV9&#43;XgLPlB0RFIs1CI5j1WWfCbpYGjDFeFsa8TY3Sy63KKlZftZftZVl&#43;1ltwojLnV5qJvNA41TE31N5yEClrdLJbWlrdLIEAeSG0FT5IulHVO0CYm&#43;oetoKjlZ82t08tzZ/JUCyEUW8MEdU4ht7AJkcloPUa7zfNrdFJWX7WX7V1ojmVAwCrGqkYqqmZU9AjqjjgQJUsguHJPd8epdWdquu8nza0nkvF2&#43;A4BUCoLIdVXRBCjrYVPQftHVdls8OKMCOfrB/LyfNp2rxi0YNQLjZijX/6qceKx2bTpVGteNvwP2jqsOiClz6gLD1JX&#43;vAWygRzUBXn4v8A0n6IWG7FE2QF82XQDnUOd2X9Nwd0UEQYH7R1XZBACKIHmfVkZT5Idi01V5mMqkkqXEoIpxLPiUKhScBKhmKrh0TNVSNFAcHjk5b7HM/Slm8OihN0TP5&#43;qWuoVdFOakOl3K3cxHFD&#43;8jsncuQQRTpIW62OqxMrHDVVkpmqdosSTjxspB6KJG0HJy3g7Z/YTcQRe4fgXm4O/ax/qO6UUGnIWOQRWJAWDSfpVDf4rnqnRyTNU7RH&#43;Slr4KrfW&#43;whYOUxB5hQX3h19aG7xWJ&#43;FisBYULOC4lbrFi4BHRM1TtF/0jjOPFbzOyqfkLKFgXNUEg4epA3isThy8lCsjuy9vuuAW8&#43;Tqq7If9L3mDRY7Un/lV2h&#43;FF1/dB39QQiL8TzCu&#43;IyqMAHQrFju1g0VFPpYQt/aGOQwVD3WQd1kZ3KwZs&#43;ywuD4WdZz3VfuyipZRUVFRUs4LAx8rOqt7KjFJj484wmU0XcD67bgrxQJEFXm1Tr3D0m3OPFM3aikWk8grroot4AoG6JCLhVOvRhyRKDSArzU69GCaGximuPGy83miXRVANjEJrjxCvLd&#43;go2lEdU/W2NmBqVvAdleCk/CwA7IN2gGPGy7s1Lp&#43;Qp48bHaKXUhe4F7gRa10kp18xKO&#43;CgXUV1rpMpweYTbhmAmhzoIXuBBrTOKOqbomgughC68GCrrjBlEtMhdk/WzecAm3qICQTKIc6MU0MMwokA8U5zaSs4QccQCiGuBKfbLXXei9z6XufS9z6W68he59LOZXufS3XkLefKw2n0gHbYCeiuHbY8kGyBqhdxACBvxI5L3Ppe59L3PpXJhEXpmwjm6Fuv7ref2W6&#43;At58rB/cLedj0XufS9z6XufSO9M&#43;tevQvEvdYQ3ohS43vQ8S/wAZiPVzt7rO3us7e6zt7rO3uoDgflSU25iD0Tv4q50lAku5YLE0TR/lRPAq1bEmt5NH&#43;RWzR1ToYXQIOKDyny0twQJmnCzcaXFFpbdIW1WJhZ291nb3WdvdZ291nb3WBB0tyN7LI3ssjeyyN7LI3spDQPhQoG1w0V7xd7Re6b9Mqh21kaKDtcNEP6hwpgnQ/ePFe51om3tqZ4YIOc&#43;9HRRM4o7xAdUK74mGiIdtJBCuna7ui976W7tY&#43;Fe8XHROJdJKgiVkb2WRvZZG9lkb2WRvZboA09eT&#43;SGtqVswTqjuSNU7AAmigDGU4ReCM01ou1m8P7gU/DTFNJ6oi7jNOaBuwNUHDEBXrv8AdMT0RusiTzQvVT/5KGmnCU5t3hSUBdgRwKbLASDWUCRz/ai7vTEK8RA1TnCIhEXZ6lAOr&#43;HPH1J4&#43;h//xAAqEAEAAgECBAUFAQEBAAAAAAABABEhMVEQQWFxMIGRofEgscHR8EDhUP/aAAgBAQABPyH/AM&#43;mFl7cb0AHQz5aALKZLf8AZjQ/MwP5ksr&#43;0abj1Qeo98TmrzzwrjZXDlx3cIDfYH/Tbkpl6fTprKeSXW0HLjmHyqzN1HLVMa97SDZZ/kzXVOfKXKNlmeLG6uxCiW9hM0jvTknyh1qy6&#43;llvKTVNs5PaXB1zLU/xZyz1djgtFnlfDlbgjRbnbVmkkqEx08FwVn2gRF6M0BHlv8A4UdbHnx9jeGSx/ZZzudXwsOFyfxPnEP&#43;4h/2E&#43;cT5hPkk&#43;aT59HAAdUPBw&#43;0tJrICBnxoP8AAVDd14iI2nPVleZXmRaMzKXq4h9TMOuQ/ukACgoOGfHN/SCNU5bzRJ8VQkN2GgeLFXke/C7uc07zBv2RFAq0EZrVzvEBcvInV&#43;pP7VP5VOj9v3Om9pgiJBRj6MOczzlppZd3i17ht&#43;hN7z/O0AAYDSNMHU3xBBf2TrAjvD/pQblgnJB7EttL7E6BFwARAGl5bcPJAjnqDZCC0F&#43;J2wVxFBuz0pOGj28KUd3kTcK1f3FblawQQQ4uVoIbOj88UFrRGhA2jwgOqnxLGGFNquApoblcPYF9p3YXho9s5JvIINAeY/mOyvIwQlLVemf8RKv0T4qfBEEBR8/q8DMtKX1lRGiNBKYTObDKfFh7h4a/dDXBIVoq9J&#43;vE/7Bu7q8EJpw84nUeqB/9p/RZ/dQJHl6vE5qUcy81bUDIs1wvQ/cGToyjrWe3iaaDtqxEsHM8&#43;Gh1s9o74K7FJy24aHBKBSCdZ2ngIrn7Q3p1pYr&#43;quOp2lICY1IvVfef1us1eaZ9/8AHieUTx6SNxeYThp9v1gAiVsenAx0EA2szxR&#43;hM05Wqus96iOdk1WsBWjOVDuPiOgOkts8cbue5w0&#43;3hq4B6JDfgQtsL1etuiaNDVYirzaIo9YlUZc5yk7Eb9JSQli5wPee7SlIALecCJQGXLtK3xADtp1HZnJegy3QoanPhTG&#43;SDZZNHt4ap5SDeDhzmc&#43;Knw0ymgmgst&#43;R2lSmgq7mPSr7xZJrfSV64GBnnIKb/AJmLat85h03mIJXh18alNcXtwGmzWGe5NHt4GpFMm62hUvp58jhYFF57bBGWs7uTMAUUeaoIArAwreVPOWoRNIuiTIQ1coCkUf8AUeC03&#43;Iw5mgdZePEKzZNsDiMQ05w8zKxiBV0DnCrV7Ee9z3BFq7leFAedxNktMYnM8v3mZ3lkUf2ZWCu9MpbnoBl1/MiHXeTUfzWKu35dpRd45ZbYJXhr28XCGfHR2&#43;jILkkvszQvI2hgHKtoqMXjpPcE89RxpqjJ95hvPzzzhdIvZcc4wDuYXTTZhPb5vdvhOmgeGaruZi0Zi6ufKNRa3KLNupFfcfZ8UuLgt017birt9hns7cMW9RpGdKNUMGrRTAUGGe5Jl3IjrasGWAaXUyy0Iusx3Q7upjadF4MT2uP10b3gwYEGESNX3WM8tK59YpLAKye5Bumtle/&#43;AhcP0igz6GB8&#43;cIso6Ygg0vQ3cRAhvy6M9yRqRLnvLn0nujcJtbsM&#43;syiL3UCoDontsfr4/UfiXDkb2&#43;05CHr/2AwZ6TFhnk4iVPJM5CHkz4t1LzyPSP8rZpKDVXTVmH3HMRWtsf8dJ7kmdXRYtFL6sDpB/MIn2FOFewx&#43;vjz7vxDmpFgXL/sfuDYTNrCDzJ0xC/wB/JSz8xr4l/wCT6es5NbGnBWtpiC0J2JobxQxTuhcr2yNSr1CSjXuLTq7Q/qP2OUA17QEzvDjQQjLFdNMvaoTLNeTlrUUBVXCzRjFGuO5Fj6PtNmO0JUZrwsfO6zF9GaSrmTTo3dx5EgR&#43;2h9sDFP0iusCurZU1p8503rOm9Z0z1nTes6b1nSes6D1nRes6R6zo&#43;qfYlAXP5twLndxDmr6kr6e5&#43;sac/VUKrQFb0vx8OK1Ivyl54LTaJqMjUiQxVRRXhU4NyLgeVoXmcXH1RlICZYIGFbpZEC&#43;g1pKx6VrMXDCooDkXKe1FwR&#43;RdhmOwFqxAwVLySoqxbXA6ArTMMIJTEHxlmSUtXY1HCLdA3ZZN6OWnB&#43;e1OKSe0T2j7cUNYY3JliNmkHc/U2lDrdBvFC1Ni05QABwWjAGrq1ispEyxaDQ4Cx6/tCT0qXtxEQwVNIC6BTMXRTgj7VRFlITDSZBNEuYuGRhxSUjwGynyxP7&#43;k/n6wG5KRl2xoEd66Z5wzyBkn3Y9o&#43;3BkKJgWKjDLLvDlkRW0O88i4BrItS0CVyam5BlQQ0pm4TJ95ZVAhPcnFkoOy5aNuDWV1Cy&#43;FaQdTWIZ5glwGyXAZI2CoF5K6w8E0DBWD0jMvkvK2subgrmcyBTk&#43;i29uWanNZXpXC4&#43;c6Fqb6JoBXREZOwlwGSNgqaR1AbtVpTT6DbSdVtXjG7MKSpj2VfmS0&#43;a5XB66cqo8Ap4oz4vPi8&#43;Lz4vPi8ujtiAbAGsRYOUpaNo5UlKVb1JQFZ1d5eQIcrliWRe1MM1gzGSyo1BcFwETTeMxLcrnEXJQVCICahglsKc0KxJW1ZmZ7QGGzNpYhyTEoW1ZLwQ3WfF58XnxefF58XnJs3Xx&#43;Lz4vPi8&#43;Lz4vLg7cgnWiVDCwaRQrLYuBO/VYuS1IcrVrGQ&#43;1pZjbbWDC1hpsZXXJ06WdB9i41CYaTTBzg1NOhFFqoqo2kdkVlCogyqDmMiy&#43;L2TmNq1UrCGyT4vPi8&#43;Lz4vPi85umyvAs3gjo3xUFuOChqzkIupTc4YuUurL2lL1OIjo6fRcA6JwvNSy6vM0hnT6/ML3oGscoiFD3lopNCuIUb80xiAOajJjvBARcroNosg45ENuU1&#43;/wBxw7cJk0uBq81VGIZYa0vS2WrCaGxvEw99D3/EqWchYRwvYBRdYaygEM6wWH7navM19z8TlmpmC/3CAc1sMO8To0Jou5WRxKGT&#43;qC2MXzpdpcbEda9YS8n6HHzAUSyny9dYAlZoY0mLQf41AzDR&#43;ui7r6eQ7L8D//aAAwDAQACAAMAAAAQ8888888&#43;z88888888888888nECK8078888888888nKInM88N&#43;88888888qKJQg&#43;vIpO38888884xcrwYxlRU8c888888&#43;k18TWI3zemXc888888shvIivz08/n288888umZswSxvAv170888888fkQ6pUXXsBr3888888/KyNCTqtT5bc888888ssHiNxozSKmB/88888/JCDsvSTxosp888818PdPO//wCWD3/nH9/McxaWScv&#43;p4fH7U41vPzrjrjjiTrv7nvrvjPLCz&#43;FJAAKBFKHFDyy/POPz89A/wBN&#43;jPfsfvzzzzzzzzzzzzxzzzzzzz/xAAgEQADAAMAAwADAQAAAAAAAAAAAREQITEgMEFAUWFx/9oACAEDAQE/EPRfey&#43;DbQmnz13M8K7XSrj760ISGNlZWVjesiq6RR99Fw3EM2yu3gknPevSjgX0/Neh6noQ&#43;bHTz2fzHhHDF3zSshZ6XAkNzD8V5vKTZjVrLQrcP6xPS2l0daG9UaEbw5G4VjfwXk2l0/Sd6JMjKzYk/okR8Gh/LKm/CrEEfomIQ/hVYQmeCdw0aNFD2WBPY2ht7Dej5blW1afQrW6N&#43;hacuGk&#43;kkEEEH&#43;BG9EkkXRKQQQSJFnZv2bNm/C4uaUuKUpS/i//xAAfEQADAAMAAgMBAAAAAAAAAAAAAREQITEgYTBBUUD/2gAIAQIBAT8Q80ifOkQg8JJ8Y2XfjmKUuY6e0SX0fCsNjGEpERERCOIuj4XVc&#43;CYSrghcJ6WYbkTHL5rDOR9HXm8gWP5oZV0ITG/Hj5ywzkPnjMOkjHvmTxwG9CwLw/B&#43;awtOjWiFieU7Gk0z0w/gojfCOxrcET6VLmPQlWRDQ1PJJvmBxaG0QKfuDa&#43;hk3hMe6GTevBM8UuMr9KylKblI5SlKUSrg01ijEC/A0Oo&#43;2D0aKPYktRBE3JgtkSag&#43;oibah2bQlqYTa4ew9x7D2HuOejJt9wewrkFK4vdi9g3ennRr5NGjXhCExCfhCYhCfhBqfy//EACoQAQACAQIEBwADAQEBAAAAAAEAESExQVFhcfAQgZGhscHRIDDh8UBQ/9oACAEBAAE/EP8A54qNEttkOnjhtsFDGH3uA6evjKMLBo0/9lLZdB15A3i7dxd/ntAraOVz0PGW8UzRQy8OBrpG1BVKXdW4EyNQ/wBz4i0XMuOMXuMSnD5b/wCnEWmXAUSoEPBQWgObUdR5GYI1mYWcw0lR14S&#43;q1nQoqyfPo&#43;UcEW1ut1284AII5E3/wDJUZwranhcol3jWPQsKaKO37AgcJYJ9s6stzLRS/sqRzvn9C2NMfrPywaydoLrz/iS1KMFr1N4TzLY2z4raY&#43;A7hk5/wDiTBDwd1vgAINOl/kJgSAFq6EOvroB/wA&#43;7ioqb3fL&#43;QaD7Gr/AH&#43;m4q6cVxHZhRRd4l8uvEhKkmdh4n5/4GJS0Te28J5V4EC7VALVoHGPNysHQOJ3wJgIFiZeRwItFxEAOFZeS4c4d3fM7BfM7JfM7C&#43;49pfMe2vmPdXzFe294ndMYnlM6c5eGLDutk5xwhmiWbJNM8AN&#43;Zy/8B2QBGovTqbTeEroQA9DofsImZVWV&#43;G0BFAGVYzbNBa8hy&#43;YQigwfBZrFRA8B7PWGwAoAoDwF9Qczj5vma2hlbNxiIWVn5/alEUFKJ7ZQhgQbBsV&#43;Hz4DG4HW09MsFsSq3q&#43;fxDLAtVoCKGHGg/5&#43;fAmiHT5Id8fMD3ev6gezzf1P&#43;pBX9v1FR14CWudbfMAAABQG38CWpcOW4&#43;/OX445tuPM&#43;P7aBdbpGD3ZRwIeBvuvIXl9gQUwFA2IIEAFHUzjwJZHNXYcV2JQEBbYergcov9k/eWfsTF/tBNvhiUGYl5Poc4Pk109B18Arl&#43;y6&#43;1xt6MnMmiSOj&#43;xHDI77Dr9w8OW4Q1Dfp3l9q8O3cHwOWnV9Hi95gUMOLarx&#43;hFjFWrv8AwIMCLN3Kn66zXAh/lHIg1VqAUC3Z5O8AlOjrOCiB029pfjbj6Ofm/wCxDbDlCNx002YB5Lq1&#43;MuaafgKGiqUfWvrw7VwYdChlNHnz5RsjzlU8eJ5bSiMbuK&#43;FUFUALV0IM2aasOfeJ/D&#43;wJfsP2I/g/Yq13HWJDXb9jvzIfOcNBuTDS3B2NuPKUBtLpzlmTHnBZ9TP8Ah/Uf9f7ey8Dwy7PEqHJ4CpFj2A3RuysADmL3V3&#43;ES4VFVbVg9FNN7GvKKEWafboebDVWd1ye80ZdnOL7&#43;7nFdV2c4bM1ZbHpcACjB4ID0OkXh9zAWAEGXhLIgLOpdF9G8p3qXufs7qMv7EUG7X2CLjtRc25eXgsPB6ilw5DwSiD4gbyc8RVVVV1Wd7pPYoOvWoMQUIsgZqB9EbqPSH/JKBHKBheD7eXi6fgpY6m7j10vyJsf/dH3e8PDvX1hafE&#43;7&#43;y21QB9P88BnKy903K/RLs&#43;fDs3B8NLz&#43;J7NNc1zTHKEh09BwJ7xYLxZjqPmCAksttydSEtYZfEAZGdUzu9osXbbGDWYAAXasCZsstrf8iUGPoPv&#43;y8U0uvWI6l5eOeuQv0H2p8O7cGE0e9p7NGbcg1XAm7Xv0mx7/SJDLoLiJhIO1a81ioxYoJ00Q3fqWrCzXnLTndUL9W5RLUsIacYTrwjOnhpVZkdBefvZngUACbcywDQZz5A6S1s0heNZfr&#43;wvF4sujtJud1CV7GS2g6OfTy8GscKjmbeZftCNLEsZ27g&#43;GjHR2UNVWn&#43;y0Ca0Zys&#43;tXeGx6Of8hEEAMtEJVFbLiJjA3zvCBplVyaeUooTTHAtUpq1leBTqNdSMoCemr1ENehxHmw6DARahgF2KzoLNIwHVx4jXnf8AcdeGzNWvx&#43;XwQEQNibMEFDWODuffRnbuDLlygVWgNV4EbETIUsX&#43;fcUs60aZNjaOHEWnKFrdrgbygAAWwpZdHS4CoW54PINY1egOOva/2Ug5VuQ9QvRlQgukz8TqMakJAaHvfVGXLjBvLGhEtQYGWYwYI6ZTEgrHrrlqZoxLxKWmRMnX&#43;w3BQKgW4g1z/wBo8/F6m&#43;k&#43;esaCxWs1hi0XoVq4EPAgwa8k5852vhOzcYViANV2h0uybyVSe0BlJDkg0&#43;40mRtpgtbT7SrlpKMN6EBIMDnHV0l6g0ifbY5ECdfVxmddjFuqX8TQIQwsjqipZfkasNvKMsi&#43;gbV4KrfWH9jW60&#43;qfsek4HGOGnU1NzwtiY6l6wlrrFbwn7vHHHW&#43;BW7&#43;QBaGxYCnBtO7cSMgFaFDV5iti2rKVfRModNCDo3x8SowNbR5LyxAaVxUTogVSESSz75fOXzXppFfNGfP&#43;RX4G3LP15M4FkuzWV6tyCMoaEzo7S76OON1t/ckKGopN&#43;pzlN/SKEc974kFoWaUDcHjByiINK1HwyhFsKicV0IkdXCXeLq&#43;UVcVCBaATvXEjpVeGPOI9NsGyjOBxruxcujTD9LwS6K7q2FAEf8ABcvpKBHMYxXNy&#43;k7nxmlKOsNJiWrLRbQFFxdsJpEiI8I1z6jEuUAdBH4BDM0Ywye8BNyneGWNDqf&#43;AwgWrjqcHnAaodXUc9XkgYGmHoj7mCTi9PVig2mpQ8yd64kIRVvB0YFOgWehmarv34vrHme0LV7xQ3Q1HpBke2AHCd/4ztnZlL9lRbShWKy8Y00XZp&#43;1Qzzky9mmDZPm3ozkWCX9pl5axhu2TX&#43;1AVaDVZo5OLHq/korX0x&#43;jfzjpVcEEaYeq/CWRcRblB8T7THuskoxNkdsTChtz/SPYtyK&#43;ZtqcQv4QBOSAfa2JzNv&#43;Zj3&#43;ZaTv8ACykDT6Ir0oA0LdzMuKHqp7B&#43;YT20jX4lYrRYu75ae0WfkydvpLc&#43;nRGmpj4/rUC1oiiaMU8Ov4iKPs4/9ecutrmGujsYljc9Y96ws&#43;a&#43;HvArFdz&#43;LlGn6yedfcVRkoEL5rDXL1v3Ch5Q74EXqnNfLB8p2WYtRC1sryimCyBtekMSBKFWVtM2slx4NcTlBmBG&#43;F4XCcP1J7RggfIQi8J1tkRojyfEx9Wm3L&#43;qyiHEVryINacNTrqvnAhSjii/aMEcLfmk&#43;5o76v5M0T0t9TBUPIfU10ecnuZKKWE53n/LfwU9b4bLdLbGpNbBqN1JAqsOFb3gwJTZ31PpZ8DLfSkpXz/NUXbawAR0Eoo0CY31/vVGQNCsioQadyaRvwCGwywr0dgV/VgVJwAqqPOBit4lbqHCDZnXwoFoN6WFx5ZO7DZXPnARisXVAzGDm6aVBpeEGzKEEy7gJrfPlGrlqL5EIlaLDYdY5CahsyxawIqmE6w6cqudGuMI0VwUX4BIq62Uj&#43;R1wTWiqH7jXwK5zdcYboMAxcyNrLqyFpeoJPYw9Rgj1v8Aydp4/wALGsnwltyOEA3bcN84IiGCao1I1uTRat&#43;QKUarp1YaRbQ6drPCowa7HkdY2CHAYPsTGmumg8uT4IEWoh5pawx1uzWvpO0fydo/kR2QC2Kbt9IDUlIYxePeZrgixVTpNKNkurNZd6BVsBxgdUwtTiohC0AYtdJTMNLx1J2j&#43;QpdN0aAH9hRawv4T3qKDx5dtyFNzVm0SrhUSVg0HmbytIRoKGZrdmfGxq3NQccICaYaJTDNf&#43;YFKN/Uc8NcpKPyFhuRai6CW65AE5w55RqRyGhqrTzuH3MLpsT2iS5FksbKetxKDAXevMnY&#43;D4JZGQhdqjpmcr26zle3WCvOPL/AFCLoFU7PHapbu/ZVGDllXKtvWYFtcs/mFWsaP3Yg1C62z52xTQbS1PebffgX3gLF7UXvNZlqqXuxKOwHRbvEe/IG1k6y3d&#43;y3d&#43;zt/6lydVa2nKbFFbSorjGI7OBbF0ehK7mNNPppKanvFt9YlUmlsedkCPArT52y8s7bLPSHZ1lQeR1l9u7zlu79lu79m3RN6VHX&#43;5bvAa1hw4OZgtY4dnPhiLp1HGuufKXVdZrHPjDB/Nx2vWLq7/ALFAVaCdgfc7A&#43;52B9zsj7nZH3LILmkvoR6KargQrhumbblXHXmiVeNSI5B5Coj4mAC9FvSATv0ZW7LDIL2HF54S&#43;8hvkLWIqACOApiL8LI2ecMRiLg4cRUQrtb3nV8EyaReekzKuhmXXzRVjjZN4Owhotu7EJFpDnWYYVRIHUukoasVrw7jFIgpFwYlMlxSD1Z2B9zsD7nYH3OwPudkfcDUnBRp6eCCIljO&#43;Pqd8fU74&#43;p3x9Tvj6gAVxSH1mu&#43;lXBmApAq0QIRCxGThAeQrQii0hoESgTJpMASBXJL13GsEFVDsOPKCFNxAW7zFlF&#43;YMC5VqINSI7qDVax17XXpdZRFGw4rTeNbMxSl3uBQQCo0IDChQJ0ixCLAcsDCZWp8kYC0s2JfF26Se874&#43;p3x9Tvj6nfH1O&#43;PqBILkg29P6BhQIaowWwHEb8bogvVxy8KSgtot3lxaowLytEFQGW8Dw18FoFLdCIlgtLZYjRBWqveCOiPhaUNqadHwUC1oJcQIKFxalOcDww&#43;FNQurq5tbdV5igVQDdiAKEdz&#43;Zg29oA1GSJdYJfqwnTVs44VkSm48KYtfxnTT3gmStaLFF1hlHayg6YowpvOnKBGBxAbNSa63luAp5L6M0o0q/EU2Kis4A2xWbqtd4rQNXJXd2bYGnOsritVaxIc9GWtW/u0qhit4ngkKaQ3wXnRTtMbL0EJSJkvVHWoVR5YgJPmfSXc413As05svGbT4WtfKdu4RQASsxuK0OdmbxTNE/TVl5YpMmInQQS3HBcA9I6onA5NMYfpNGQwDaoc8SiXgCwLwLKp1lfFMMKmmC7wdYyGZYNbBKy1OaqG1aQ1wvCZ3pqCQARCsFtaY0r&#43;aC2hZ/NB1/iO1GuB3f8K8KqKBCzRr&#43;K4ZqU5P6P/9k=" alt="">
+        <div>
+          <strong>شؤون الموظفين — إدارة الموظفين</strong>
+          <small id="userLine"></small>
+        </div>
+      </div>
+      <button id="logoutBtn" class="logout" type="button">⎋</button>
+    </header>
+
+    <div class="wrap">
+      <div class="layout">
+        <aside class="panel">
+          <div class="panel-head">
+            <h2>الموظفون</h2>
+            <button id="newEmployeeBtn" class="btn btn-soft" type="button">+ جديد</button>
+          </div>
+
+          <label>بحث
+            <input id="searchInput" placeholder="الاسم أو الرقم أو القسم">
+          </label>
+
+          <div id="employeeList" class="employee-list"></div>
+        </aside>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="formTitle">إضافة موظف جديد</h2>
+              <div id="formHint" class="muted">يُنشأ الرقم الوظيفي تلقائياً عند تركه فارغاً.</div>
+            </div>
+            <span id="statusBadge" class="badge badge-active">جديد</span>
+          </div>
+
+          <form id="employeeForm">
+            <input id="employeeId" type="hidden">
+
+            <div class="form-grid">
+              <label>اسم الموظف
+                <input id="employeeName" maxlength="120" required>
+              </label>
+
+              <label>الرقم الوظيفي
+                <input id="employeeNo" maxlength="50" placeholder="اتركه فارغاً للتوليد التلقائي">
+              </label>
+
+              <label>القسم
+                <select id="department" required></select>
+              </label>
+
+              <label>المسمى الوظيفي
+                <input id="jobTitle" maxlength="100" placeholder="مثال: عامل قص">
+              </label>
+
+              <label>رقم الهاتف
+                <input id="phone" inputmode="tel" placeholder="مثال: 777123456">
+              </label>
+
+              <label>رقم واتساب
+                <input id="whatsappPhone" inputmode="tel" placeholder="اتركه فارغاً لاستخدام رقم الهاتف">
+              </label>
+
+              <label>رقم الهوية
+                <input id="nationalId" maxlength="80">
+              </label>
+
+              <label>رقم الفرع
+                <input id="branchNo" maxlength="80">
+              </label>
+
+              <label>تاريخ التعيين
+                <input id="hireDate" type="date">
+              </label>
+
+              <label>نوع الحساب
+                <select id="accountRole"></select>
+              </label>
+
+              <label>اسم الدخول
+                <input id="portalUsername" maxlength="32" placeholder="يُولد تلقائياً عند تركه فارغاً">
+              </label>
+
+              <label>كلمة المرور المؤقتة
+                <input id="temporaryPassword" type="password" minlength="8" placeholder="8 أحرف على الأقل">
+              </label>
+            </div>
+
+            <label class="check-row">
+              <input id="createAccount" type="checkbox" checked>
+              إنشاء حساب دخول للموظف وربطه ببوابته
+            </label>
+
+            <label>ملاحظات
+              <textarea id="notes" maxlength="1000"></textarea>
+            </label>
+
+            <div class="actions">
+              <button id="saveBtn" class="btn btn-primary" type="submit">حفظ الموظف</button>
+              <button id="statusBtn" class="btn btn-danger hidden" type="button">إيقاف الموظف</button>
+              <button id="resetPasswordBtn" class="btn btn-soft hidden" type="button">إعادة تعيين كلمة المرور</button>
+            </div>
+          </form>
+
+          <div id="credentialsBox" class="credentials hidden">
+            <strong id="credentialsTitle" style="color:var(--green)">تم تجهيز حساب الموظف</strong>
+
+            <div class="credentials-grid">
+              <div class="credential">
+                <span>اسم الدخول</span>
+                <strong id="credentialUsername"></strong>
+              </div>
+              <div class="credential">
+                <span>كلمة المرور المؤقتة</span>
+                <strong id="credentialPassword"></strong>
+              </div>
+              <div class="credential">
+                <span>رابط البوابة</span>
+                <strong id="credentialPortal"></strong>
+              </div>
+            </div>
+
+            <div class="credential-actions">
+              <button id="openPortalBtn" class="btn btn-soft" type="button">فتح بوابة الموظف</button>
+              <button id="copyCredentialsBtn" class="btn btn-soft" type="button">نسخ بيانات الدخول</button>
+              <button id="whatsappCredentialsBtn" class="btn btn-success" type="button">إرسال عبر واتساب</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script>
+    'use strict';
+
+    const CONFIG={"company":{"ar":"قمم افريست لصناعة البلاستيك","en":"QIMAM AFRAST","tagline":"قوة في التصنيع | متانة في الأداء | جودة تدوم","phone1":"785115118","phone2":"785102000","currency":"ريال يمني","domain":"q-afrast.com"},"firebase":{"apiKey":"AIzaSyAbHWYRgc5tzt3ikHO241aqydp6xYsRwTE","projectId":"qimam-afrast-system","authDomainSuffix":"auth.q-afrast.com"},"version":"1.0.0","webAppExecUrl":"https://script.google.com/macros/s/AKfycbx2zSsltwFfx_evnsWhVhMxKjiK1VB1mkjngw0s7xKMybI20WH2TRYbmqh6i40PL6YTHw/exec","webAppDevUrl":"https://script.google.com/macros/s/AKfycbx2zSsltwFfx_evnsWhVhMxKjiK1VB1mkjngw0s7xKMybI20WH2TRYbmqh6i40PL6YTHw/dev","environment":""};
+    const $=(id)=>document.getElementById(id);
+
+    let idToken='';
+    let bootstrapData=null;
+    let employees=[];
+    let selectedEmployee=null;
+    let lastCredentials=null;
+    let searchTimer=null;
+
+    function escapeHtml(value){
+      return String(value==null?'':value).replace(
+        /[&<>"']/g,
+        (char)=>({
+          '&':'&amp;','<':'&lt;','>':'&gt;',
+          '"':'&quot;',"'":'&#39;'
+        })[char]
+      );
+    }
+
+    function todayKey(){
+      const date=new Date();
+
+      return date.getFullYear()+'-'+
+        String(date.getMonth()+1).padStart(2,'0')+'-'+
+        String(date.getDate()).padStart(2,'0');
+    }
+
+    function emailForUsername(username){
+      const value=String(username||'').trim().toLowerCase();
+
+      if(!/^[a-z0-9._-]{3,32}$/.test(value)){
+        throw new Error('اسم المستخدم غير صالح');
+      }
+
+      return value+'@'+CONFIG.firebase.authDomainSuffix;
+    }
+
+    async function firebaseLogin(username,password){
+      const url=
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='+
+        encodeURIComponent(CONFIG.firebase.apiKey);
+
+      const response=await fetch(url,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          email:emailForUsername(username),
+          password:String(password||''),
+          returnSecureToken:true
+        })
+      });
+
+      const data=await response.json();
+
+      if(!response.ok){
+        const code=data&&data.error&&data.error.message;
+
+        if(code==='INVALID_LOGIN_CREDENTIALS'){
+          throw new Error('اسم المستخدم أو كلمة المرور غير صحيحة');
+        }
+
+        throw new Error(code||'تعذر تسجيل الدخول');
+      }
+
+      idToken=data.idToken;
+    }
+
+    async function callApi(action,payload){
+      const response=await fetch('https://script.google.com/macros/s/AKfycbx2zSsltwFfx_evnsWhVhMxKjiK1VB1mkjngw0s7xKMybI20WH2TRYbmqh6i40PL6YTHw/exec',{
+        method:'POST',
+        headers:{'content-type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({action:action,token:idToken,payload:payload||{},requestId:String(Date.now())})
+      });
+      const result=await response.json();
+      if(!result||!result.ok)throw new Error(result&&result.error&&result.error.message||'فشل الاتصال بالخادم');
+      return result.data;
+    }
+
+    function toast(message){
+      $('toast').textContent=message;
+      $('toast').classList.remove('hidden');
+
+      setTimeout(()=>{
+        $('toast').classList.add('hidden');
+      },2500);
+    }
+
+    async function loadEmployees(query){
+      bootstrapData=await callApi(
+        'employeeManagementBootstrap',
+        {q:query||''}
+      );
+
+      employees=bootstrapData.employees||[];
+      fillSelects();
+      renderEmployees();
+    }
+
+    function fillSelects(){
+      if(!$('department').options.length){
+        $('department').innerHTML=
+          '<option value="">اختر القسم</option>'+
+          (bootstrapData.departments||[]).map((department)=>
+            '<option value="'+escapeHtml(department)+'">'+
+              escapeHtml(department)+
+            '</option>'
+          ).join('');
+      }
+
+      if(!$('accountRole').options.length){
+        $('accountRole').innerHTML=
+          (bootstrapData.roles||[]).map((role)=>
+            '<option value="'+escapeHtml(role.id)+'">'+
+              escapeHtml(role.name)+
+            '</option>'
+          ).join('');
+      }
+    }
+
+    function renderEmployees(){
+      if(!employees.length){
+        $('employeeList').innerHTML=
+          '<div class="empty">لا يوجد موظفون مطابقون.</div>';
+        return;
+      }
+
+      $('employeeList').innerHTML=employees.map((employee)=>{
+        const active=
+          selectedEmployee&&selectedEmployee.id===employee.id
+            ?' active'
+            :'';
+
+        return (
+          '<button type="button" class="employee-card'+active+'" '+
+          'data-id="'+escapeHtml(employee.id)+'">'+
+            '<div>'+
+              '<strong>'+escapeHtml(employee.name)+'</strong>'+
+              '<div class="muted">'+
+                escapeHtml(employee.employeeNo)+' — '+
+                escapeHtml(employee.department||'')+
+              '</div>'+
+              '<div class="muted">'+
+                (employee.hasAccount
+                  ?'الدخول: '+escapeHtml(employee.username)
+                  :'بدون حساب دخول')+
+              '</div>'+
+            '</div>'+
+            '<span class="badge '+
+              (employee.active?'badge-active':'badge-off')+
+            '">'+
+              (employee.active?'نشط':'موقوف')+
+            '</span>'+
+          '</button>'
+        );
+      }).join('');
+
+      document.querySelectorAll('.employee-card').forEach((button)=>{
+        button.addEventListener('click',()=>{
+          selectEmployee(button.dataset.id);
+        });
+      });
+    }
+
+    function syncAccountControls(){
+      const hasLinkedAccount=!!(
+        selectedEmployee&&selectedEmployee.hasAccount
+      );
+      const enabled=hasLinkedAccount||$('createAccount').checked;
+
+      $('createAccount').disabled=hasLinkedAccount;
+      $('portalUsername').disabled=!enabled;
+      $('temporaryPassword').disabled=!enabled;
+      $('accountRole').disabled=!enabled;
+    }
+
+    function resetForm(){
+      selectedEmployee=null;
+      lastCredentials=null;
+
+      $('employeeForm').reset();
+      $('employeeId').value='';
+      $('hireDate').value=todayKey();
+      $('createAccount').disabled=false;
+      $('createAccount').checked=true;
+      $('accountRole').value='WORKER';
+      syncAccountControls();
+      $('formTitle').textContent='إضافة موظف جديد';
+      $('formHint').textContent=
+        'يُنشأ الرقم الوظيفي واسم الدخول تلقائياً عند تركهما فارغين.';
+      $('statusBadge').textContent='جديد';
+      $('statusBadge').className='badge badge-active';
+      $('statusBtn').classList.add('hidden');
+      $('resetPasswordBtn').classList.add('hidden');
+      $('credentialsBox').classList.add('hidden');
+
+      renderEmployees();
+    }
+
+    function selectEmployee(employeeId){
+      selectedEmployee=employees.find(
+        (employee)=>employee.id===employeeId
+      )||null;
+
+      if(!selectedEmployee)return;
+
+      const employee=selectedEmployee;
+
+      $('employeeId').value=employee.id;
+      $('employeeName').value=employee.name||'';
+      $('employeeNo').value=employee.employeeNo||'';
+      $('department').value=employee.department||'';
+      $('jobTitle').value=employee.jobTitle||'';
+      $('phone').value=employee.phone||'';
+      $('whatsappPhone').value=employee.whatsappPhone||'';
+      $('nationalId').value=employee.nationalId||'';
+      $('branchNo').value=employee.branchNo||'';
+      $('hireDate').value=employee.hireDate||todayKey();
+      $('accountRole').value=employee.accountRole||'WORKER';
+      $('portalUsername').value=employee.username||'';
+      $('temporaryPassword').value='';
+      $('createAccount').checked=employee.hasAccount;
+      $('notes').value=employee.notes||'';
+      syncAccountControls();
+
+      $('formTitle').textContent='تعديل الموظف';
+      $('formHint').textContent=
+        employee.hasAccount
+          ?'الحساب مرتبط بالبوابة. اترك كلمة المرور فارغة لإبقائها كما هي.'
+          :'لا يوجد حساب دخول لهذا الموظف. فعّل إنشاء الحساب وأدخل كلمة مرور.';
+
+      $('statusBadge').textContent=
+        employee.active?'نشط':'موقوف';
+
+      $('statusBadge').className=
+        'badge '+(employee.active?'badge-active':'badge-off');
+
+      $('statusBtn').classList.remove('hidden');
+      $('statusBtn').textContent=
+        employee.active?'إيقاف الموظف':'إعادة تفعيل الموظف';
+
+      $('statusBtn').className=
+        'btn '+(employee.active?'btn-danger':'btn-success');
+
+      $('resetPasswordBtn').classList.toggle(
+        'hidden',
+        !employee.hasAccount
+      );
+
+      $('credentialsBox').classList.add('hidden');
+
+      renderEmployees();
+    }
+
+    async function saveEmployee(event){
+      event.preventDefault();
+
+      const button=$('saveBtn');
+      const temporaryPassword=$('temporaryPassword').value;
+
+      button.disabled=true;
+      button.textContent='جاري الحفظ...';
+
+      try{
+        const result=await callApi(
+          'employeeManagementSave',
+          {
+            id:$('employeeId').value,
+            name:$('employeeName').value,
+            employeeNo:$('employeeNo').value,
+            department:$('department').value,
+            jobTitle:$('jobTitle').value,
+            phone:$('phone').value,
+            whatsappPhone:$('whatsappPhone').value,
+            nationalId:$('nationalId').value,
+            branchNo:$('branchNo').value,
+            hireDate:$('hireDate').value,
+            accountRole:$('accountRole').value,
+            username:$('portalUsername').value,
+            password:temporaryPassword,
+            createAccount:$('createAccount').checked,
+            notes:$('notes').value
+          }
+        );
+
+        await loadEmployees('');
+        selectEmployee(result.employee.id);
+
+        if(result.accountLinked){
+          lastCredentials={
+            username:result.username,
+            password:temporaryPassword,
+            portalUrl:result.portalUrl,
+            phone:result.whatsappPhone||
+              result.employee.whatsappPhone||
+              result.employee.phone||
+              '',
+            employeeName:result.employee.name
+          };
+
+          showCredentials();
+        }
+
+        toast('تم حفظ الموظف بنجاح');
+
+      }catch(error){
+        toast(error.message);
+      }finally{
+        button.disabled=false;
+        button.textContent='حفظ الموظف';
+      }
+    }
+
+    function showCredentials(){
+      if(!lastCredentials)return;
+
+      $('credentialUsername').textContent=
+        lastCredentials.username||'';
+
+      $('credentialPassword').textContent=
+        lastCredentials.password||
+        'لم يتم تغيير كلمة المرور';
+
+      $('credentialPortal').textContent=
+        lastCredentials.portalUrl||'';
+
+      $('credentialsTitle').textContent=
+        lastCredentials.password
+          ?'تم تجهيز بيانات دخول الموظف'
+          :'تم حفظ الموظف والحساب';
+
+      $('credentialsBox').classList.remove('hidden');
+    }
+
+    async function toggleEmployeeStatus(){
+      if(!selectedEmployee)return;
+
+      const targetActive=!selectedEmployee.active;
+      const confirmed=confirm(
+        targetActive
+          ?'إعادة تفعيل الموظف وحسابه؟'
+          :'إيقاف الموظف وحسابه عن الدخول؟'
+      );
+
+      if(!confirmed)return;
+
+      $('statusBtn').disabled=true;
+
+      try{
+        const result=await callApi(
+          'employeeManagementSetStatus',
+          {
+            employeeId:selectedEmployee.id,
+            active:targetActive
+          }
+        );
+
+        await loadEmployees('');
+        selectEmployee(selectedEmployee.id);
+
+        toast(
+          result.warning
+            ?'تم تحديث الحالة داخل النظام مع تنبيه: '+result.warning
+            :(targetActive?'تم تفعيل الموظف':'تم إيقاف الموظف')
+        );
+
+      }catch(error){
+        toast(error.message);
+      }finally{
+        $('statusBtn').disabled=false;
+      }
+    }
+
+    async function resetPassword(){
+      if(!selectedEmployee||!selectedEmployee.hasAccount)return;
+
+      const password=prompt(
+        'أدخل كلمة مرور مؤقتة جديدة من 8 أحرف على الأقل:'
+      );
+
+      if(password===null)return;
+
+      if(String(password).length<8){
+        toast('كلمة المرور يجب أن تكون 8 أحرف على الأقل');
+        return;
+      }
+
+      $('resetPasswordBtn').disabled=true;
+
+      try{
+        const result=await callApi(
+          'employeeManagementResetPassword',
+          {
+            employeeId:selectedEmployee.id,
+            password:String(password)
+          }
+        );
+
+        lastCredentials={
+          username:result.username,
+          password:String(password),
+          portalUrl:result.portalUrl,
+          phone:result.whatsappPhone||
+            selectedEmployee.whatsappPhone||
+            selectedEmployee.phone||
+            '',
+          employeeName:selectedEmployee.name
+        };
+
+        showCredentials();
+        toast('تم تغيير كلمة المرور');
+
+      }catch(error){
+        toast(error.message);
+      }finally{
+        $('resetPasswordBtn').disabled=false;
+      }
+    }
+
+    function credentialsText(){
+      if(!lastCredentials)return '';
+
+      const lines=[
+        'مرحباً '+lastCredentials.employeeName+'،',
+        '',
+        'تم تجهيز حسابك في نظام قمم افريست.',
+        'اسم الدخول: '+lastCredentials.username
+      ];
+
+      if(lastCredentials.password){
+        lines.push(
+          'كلمة المرور المؤقتة: '+lastCredentials.password
+        );
+      }
+
+      lines.push(
+        'رابط البوابة:',
+        lastCredentials.portalUrl,
+        '',
+        'قمم افريست لصناعة البلاستيك'
+      );
+
+      return lines.join('\n');
+    }
+
+    function normalizeWhatsapp(value){
+      let phone=String(value||'').replace(/[^\d+]/g,'');
+
+      if(!phone)return '';
+
+      if(phone.startsWith('+967')){
+        phone=phone.slice(1);
+      }else if(phone.startsWith('00967')){
+        phone=phone.slice(2);
+      }else if(phone.startsWith('967')){
+      }else if(phone.startsWith('0')){
+        phone='967'+phone.slice(1);
+      }else{
+        phone='967'+phone;
+      }
+
+      return phone;
+    }
+
+    $('loginForm').addEventListener('submit',async(event)=>{
+      event.preventDefault();
+
+      $('loginError').classList.add('hidden');
+      $('loginForm').classList.add('hidden');
+      $('loginLoading').classList.remove('hidden');
+
+      try{
+        await firebaseLogin(
+          $('username').value,
+          $('password').value
+        );
+
+        const boot=await callApi('bootstrap',{});
+
+        $('userLine').textContent=
+          (boot.user.displayName||boot.user.username)+
+          ' — '+boot.user.roleId;
+
+        await loadEmployees('');
+
+        $('loginScreen').classList.add('hidden');
+        $('appScreen').classList.remove('hidden');
+        resetForm();
+
+      }catch(error){
+        $('loginLoading').classList.add('hidden');
+        $('loginForm').classList.remove('hidden');
+        $('loginError').textContent=error.message;
+        $('loginError').classList.remove('hidden');
+      }
+    });
+
+    $('employeeForm').addEventListener('submit',saveEmployee);
+    $('newEmployeeBtn').addEventListener('click',resetForm);
+    $('statusBtn').addEventListener('click',toggleEmployeeStatus);
+    $('resetPasswordBtn').addEventListener('click',resetPassword);
+
+    $('searchInput').addEventListener('input',()=>{
+      clearTimeout(searchTimer);
+
+      searchTimer=setTimeout(async()=>{
+        try{
+          await loadEmployees($('searchInput').value);
+        }catch(error){
+          toast(error.message);
+        }
+      },350);
+    });
+
+    $('createAccount').addEventListener('change',syncAccountControls);
+
+    $('openPortalBtn').addEventListener('click',()=>{
+      if(!lastCredentials)return;
+      window.open(lastCredentials.portalUrl,'_blank','noopener');
+    });
+
+    $('copyCredentialsBtn').addEventListener('click',async()=>{
+      if(!lastCredentials)return;
+
+      try{
+        await navigator.clipboard.writeText(credentialsText());
+        toast('تم نسخ بيانات الدخول');
+      }catch(error){
+        toast('تعذر النسخ التلقائي. استخدم زر واتساب.');
+      }
+    });
+
+    $('whatsappCredentialsBtn').addEventListener('click',()=>{
+      if(!lastCredentials)return;
+
+      const phone=normalizeWhatsapp(lastCredentials.phone);
+
+      if(!/^967\d{9}$/.test(phone)){
+        toast('رقم واتساب الموظف غير صحيح');
+        return;
+      }
+
+      const url=
+        'https://wa.me/'+phone+
+        '?text='+encodeURIComponent(credentialsText());
+
+      window.open(url,'_blank','noopener');
+    });
+
+    $('logoutBtn').addEventListener('click',()=>{
+      location.reload();
+    });
+
+    $('hireDate').value=todayKey();
+  </script>
+<button id="installAppBtn" type="button">تثبيت التطبيق</button>
+<script>
+let qimamInstallPrompt=null;
+addEventListener('beforeinstallprompt',event=>{event.preventDefault();qimamInstallPrompt=event;document.getElementById('installAppBtn').style.display='block'});
+document.getElementById('installAppBtn').addEventListener('click',async()=>{if(!qimamInstallPrompt)return;qimamInstallPrompt.prompt();await qimamInstallPrompt.userChoice;qimamInstallPrompt=null;document.getElementById('installAppBtn').style.display='none'});
+addEventListener('appinstalled',()=>document.getElementById('installAppBtn').style.display='none');
+if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js');
+</script>
+</body>
+</html>
