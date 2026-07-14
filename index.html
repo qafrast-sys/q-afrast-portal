@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#073d70">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>نظام قمم افريست</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    *{box-sizing:border-box}html,body{height:100%;margin:0;font-family:Tahoma,"Segoe UI",Arial,sans-serif;background:#f4f7fb;color:#13233a}
+    body{display:flex;flex-direction:column;overflow:hidden}.top{height:68px;display:flex;align-items:center;gap:12px;padding:10px 16px;background:#fff;border-bottom:1px solid #dce5ef;box-shadow:0 2px 12px #073d7012;z-index:3}
+    .brand{display:flex;align-items:center;gap:10px;min-width:0}.mark{width:46px;height:46px;border-radius:14px;background:#073d70;color:#fff;display:grid;place-items:center;font-weight:900;font-size:25px}.name{font-weight:900;color:#073d70}.sub{font-size:12px;color:#708096;margin-top:3px}
+    .actions{margin-right:auto;display:flex;gap:8px}.btn{border:0;border-radius:12px;min-height:44px;padding:0 14px;font-weight:800;cursor:pointer;background:#eaf1f8;color:#073d70}.btn.primary{background:#073d70;color:#fff}.status{font-size:12px;color:#64748b;white-space:nowrap}
+    .framewrap{position:relative;flex:1;min-height:0}.loader{position:absolute;inset:0;display:grid;place-items:center;background:#f4f7fb;z-index:2;text-align:center;padding:24px}.loader.hide{display:none}.spinner{width:42px;height:42px;border:4px solid #dbe7f2;border-top-color:#073d70;border-radius:50%;animation:spin .8s linear infinite;margin:auto auto 14px}@keyframes spin{to{transform:rotate(360deg)}}
+    iframe{width:100%;height:100%;border:0;background:#fff}.fallback{display:none;max-width:520px;margin:auto;background:white;padding:28px;border-radius:20px;box-shadow:0 12px 35px #073d7020}.fallback.show{display:block}.fallback a{display:block;text-decoration:none;margin-top:14px;text-align:center;padding:14px;border-radius:12px;background:#073d70;color:#fff;font-weight:900}
+    @media(max-width:640px){.top{height:60px;padding:7px 10px}.mark{width:42px;height:42px}.sub,.status{display:none}.btn{padding:0 10px}.name{font-size:14px}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><div class="mark">ق</div><div><div class="name">نظام قمم افريست</div><div class="sub">الإدارة والتشغيل والموظفون</div></div></div>
+    <div class="actions"><span class="status" id="status">متصل</span><button class="btn" id="install" hidden>تثبيت</button><button class="btn primary" onclick="reloadPortal()">تحديث</button></div>
+  </header>
+  <main class="framewrap">
+    <div class="loader" id="loader"><div><div class="spinner"></div><strong>جاري فتح النظام…</strong><p>قد يستغرق الدخول الأول بضع ثوانٍ.</p></div></div>
+    <iframe id="portal" title="نظام قمم افريست" allow="clipboard-read; clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <section class="loader fallback" id="fallback"><div><strong>تعذر عرض النظام داخل التطبيق</strong><p>يمكن فتح البوابة مباشرة بأمان، ثم العودة للتطبيق لاحقاً.</p><a id="direct" target="_blank" rel="noopener">فتح نظام قمم افريست</a></div></section>
+  </main>
+  <script>
+    const BACKEND='https://script.google.com/macros/s/AKfycbyBbb9jJxaebpYvThd1QNNGI2-EeAcI80_d3xNDA8eZ/exec?v=142';
+    const frame=document.getElementById('portal'),loader=document.getElementById('loader'),fallback=document.getElementById('fallback'),direct=document.getElementById('direct');
+    direct.href=BACKEND; frame.src=BACKEND;
+    frame.addEventListener('load',()=>loader.classList.add('hide'));
+    setTimeout(()=>{if(!loader.classList.contains('hide')){loader.classList.add('hide');fallback.classList.add('show')}},15000);
+    function reloadPortal(){fallback.classList.remove('show');loader.classList.remove('hide');frame.src=BACKEND+'&t='+Date.now()}
+    addEventListener('online',()=>document.getElementById('status').textContent='متصل');addEventListener('offline',()=>document.getElementById('status').textContent='غير متصل');
+    let promptEvent;addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;document.getElementById('install').hidden=false});document.getElementById('install').onclick=async()=>{if(promptEvent){promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;document.getElementById('install').hidden=true}};
+    if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js');
+  </script>
+</body>
+</html>
