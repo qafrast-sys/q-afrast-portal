@@ -1,4 +1,4 @@
-const CACHE="qimam-portal-v14";
+const CACHE="qimam-portal-v15";
 const ASSETS=["/","/index.html","/worker.html","/hr.html","/hrfinance.html","/closing.html","/sales.html","/operations.html","/employees.html","/manifest.webmanifest","/icon.svg"];
 
 self.addEventListener("install",event=>event.waitUntil(
@@ -18,7 +18,7 @@ self.addEventListener("fetch",event=>{
   if(req.mode==="navigate"){
     event.respondWith((async()=>{
       const url=new URL(req.url);
-      const fallbackPath=url.pathname==="/"?"/index.html":(url.pathname.endsWith(".html")?url.pathname:url.pathname+".html");
+      const routePath=url.pathname.replace(/\/$/,"")||"/";const fallbackPath=routePath==="/"?"/index.html":(routePath.endsWith(".html")?routePath:routePath+".html");
       const cached=(await caches.match(req))||(await caches.match(fallbackPath))||(await caches.match("/index.html"));
       const network=fetch(req).then(response=>{
         const copy=response.clone();
