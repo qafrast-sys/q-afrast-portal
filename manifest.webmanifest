@@ -1,4 +1,40 @@
 {
+  "id": "/",
+  "name": "نظام قمم افريست",
+  "short_name": "قمم افريست",
+  "description": "بوابة إدارة وتشغيل مصنع قمم افريست",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+  "background_color": "#f4f7fb",
+  "theme_color": "#073d70",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "لوحة المدير",
+      "short_name": "المدير",
+      "url": "/"
+    },
+    {
+      "name": "بوابة العامل",
+      "short_name": "العامل",
+      "url": "/worker.html"
+    }
+  ]
+}{
   "name":"نظام قمم افريست",
   "short_name":"نظام قمم افريست",
   "description":"بوابة إدارة وتشغيل مصنع قمم افريست",
