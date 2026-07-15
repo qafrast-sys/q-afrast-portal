@@ -1,4 +1,4 @@
-const CACHE="qimam-portal-v4";
+const CACHE="qimam-portal-v5";
 const ASSETS=["/","/index.html","/worker.html","/hr.html","/hrfinance.html","/closing.html","/sales.html","/operations.html","/employees.html","/manifest.webmanifest","/icon.svg"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
