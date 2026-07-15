@@ -1,15 +1,21 @@
 {
-  "name":"نظام قمم افريست",
-  "short_name":"نظام قمم افريست",
-  "description":"بوابة إدارة وتشغيل مصنع قمم افريست",
-  "lang":"ar",
-  "dir":"rtl",
-  "id":"/","start_url":"/index.html?source=pwa",
-  "scope":"/",
-  "display":"standalone",
-  "background_color":"#f4f7fb",
-  "theme_color":"#073d70",
-  "icons":[
-    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  "name": "نظام قمم افريست",
+  "short_name": "نظام قمم افريست",
+  "description": "بوابة إدارة وتشغيل مصنع قمم افريست",
+  "lang": "ar",
+  "dir": "rtl",
+  "id": "/",
+  "start_url": "/index.html?source=pwa&v=16",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#073d70",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
