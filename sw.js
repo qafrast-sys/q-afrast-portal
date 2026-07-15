@@ -1,9 +1,10 @@
-const CACHE="qimam-portal-v16";
-const ASSETS=["/","/index.html","/worker.html","/hr.html","/hrfinance.html","/closing.html","/sales.html","/operations.html","/employees.html","/manifest.webmanifest","/icon.svg"];
-
-self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
-
-function canonicalPath(url){const p=url.pathname.replace(/\/$/,"")||"/";return p==="/"?"/index.html":(p.endsWith(".html")?p:p+".html")}
-async function update(request,key){try{const response=await fetch(request,{cache:"no-store"});if(response&&response.ok){const cache=await caches.open(CACHE);await cache.put(key||request,response.clone())}return response}catch(error){return null}}
-self.addEventListener("fetch",event=>{const request=event.request;if(request.method!=="GET"||new URL(request.url).origin!==location.origin)return;if(request.mode==="navigate"){event.respondWith((async()=>{const key=canonicalPath(new URL(request.url));const cached=await caches.match(key)||await caches.match("/index.html");event.waitUntil(update(request,key));return cached||await update(request,key)||Response.error()})());return}event.respondWith((async()=>{const cached=await caches.match(request);const network=update(request,request);return cached||await network||Response.error()})())});
+const CACHE="qimam-portal-v17";
+const ROOT="/";
+const HTML_ROUTES=["/","/worker","/hr","/hrfinance","/closing","/sales","/operations","/employees"];
+const STATIC_ASSETS=["/manifest.webmanifest","/icon.svg"];
+self.addEventListener("install",event=>event.waitUntil((async()=>{const cache=await caches.open(CACHE);await Promise.allSettled([...HTML_ROUTES,...STATIC_ASSETS].map(asset=>cache.add(asset)));await self.skipWaiting()})()));
+self.addEventListener("activate",event=>event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)));await self.clients.claim()})()));
+function routeKey(url){const path=url.pathname.replace(/\.html$/,'').replace(/\/$/,'')||'/';return path==='/index'?'/':path}
+async function network(request,key){try{const response=await fetch(request,{cache:'no-store'});if(response&&response.ok){const cache=await caches.open(CACHE);await cache.put(key,response.clone())}return response}catch(error){return null}}
+function offlineResponse(){return new Response('<!doctype html><html lang="ar" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>لا يوجد اتصال</title><body style="font-family:Tahoma,Arial;background:#f3f7fa;color:#07386b;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center"><main><h1>تعذر الاتصال</h1><p>تحقق من الإنترنت ثم أعد المحاولة.</p><button onclick="location.reload()" style="padding:12px 18px;border:0;border-radius:12px;background:#07386b;color:white">إعادة المحاولة</button></main></body></html>',{status:503,headers:{'content-type':'text/html;charset=utf-8'}})}
+self.addEventListener('fetch',event=>{const request=event.request;const url=new URL(request.url);if(request.method!=='GET'||url.origin!==self.location.origin)return;const key=routeKey(url);if(request.mode==='navigate'||request.destination==='document'){event.respondWith((async()=>{const fresh=await network(request,key);if(fresh)return fresh;return await caches.match(key,{ignoreSearch:true})||offlineResponse()})());return}event.respondWith((async()=>{const cached=await caches.match(request,{ignoreSearch:true});if(cached)return cached;return await network(request,request)||Response.error()})())});
