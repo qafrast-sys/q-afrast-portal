@@ -1,4 +1,4 @@
-const CACHE="qimam-portal-v17";
+const CACHE="qimam-portal-v18";
 const ROOT="/";
 const HTML_ROUTES=["/","/worker","/hr","/hrfinance","/closing","/sales","/operations","/employees"];
 const STATIC_ASSETS=["/manifest.webmanifest","/icon.svg"];
